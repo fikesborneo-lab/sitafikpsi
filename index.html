@@ -225,7 +225,7 @@
                 { id: 1, Mahasiswa: "Rina Wati", Jenis: "Seminar Proposal", Tanggal: "2024-12-15", Jam: "09:00", Ruang: "R. Sidang 1", Penguji_1: "Dr. Budi Santoso" }
             ],
             'Data Unduhan': [
-                { id: 1, Judul: "Pedoman Penulisan Skripsi 2024", Kategori: "Pedoman", Link: "#" },
+                { id: 1, Judul: "Pedoman Penulisan Tugas Akhir 2024", Kategori: "Pedoman", Link: "#" },
             ],
             'Informasi': [
                 { id: 1, Judul: "Jadwal Libur Semester", Isi: "Libur dimulai tanggal 25 Desember hingga 5 Januari.", Penulis: "Admin", Tanggal: "2024-12-20", Tipe: "Umum" }
@@ -709,7 +709,7 @@
                     <div className="space-y-6">
                         <div>
                             <h2 className="text-xl font-bold text-purple-900">Manajemen Jadwal</h2>
-                            <p className="text-sm text-gray-500">Ajukan dan kelola bimbingan skripsi.</p>
+                            <p className="text-sm text-gray-500">Ajukan dan kelola bimbingan tugas akhir.</p>
                         </div>
 
                         {userRole === 'mahasiswa' && (
@@ -804,7 +804,7 @@
                 <div className="space-y-6 pb-20 animate-fade-in">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-4">
                         <div>
-                            <h2 className="text-3xl font-bold text-purple-900">Bimbingan Skripsi</h2>
+                            <h2 className="text-3xl font-bold text-purple-900">Bimbingan Tugas Akhir</h2>
                             <p className="text-purple-600">Pantau progres, diskusi revisi, dan atur jadwal.</p>
                         </div>
                         <div className="flex bg-white/50 p-1 rounded-xl border border-white/60 shadow-sm">
@@ -1130,7 +1130,7 @@
                     ProgresDeskripsi: formData.deskripsi,
                     LastUpdateProgres: new Date().toISOString()
                 });
-                alert("Data Skripsi & Progres berhasil diperbarui!");
+                alert("Data Tugas Akhir & Progres berhasil diperbarui!");
             };
 
             if (!studentData) return <div className="p-8 text-center text-gray-500">Data mahasiswa tidak ditemukan. Hubungi admin.</div>;
@@ -1164,7 +1164,7 @@
                                     className="textarea-modern min-h-[100px] font-semibold text-purple-900" 
                                     value={formData.judul} 
                                     onChange={e => setFormData({...formData, judul: e.target.value})} 
-                                    placeholder="Masukkan Judul Skripsi Anda..." 
+                                    placeholder="Masukkan Judul Tugas Akhir Anda..." 
                                     required 
                                 />
                                 <p className="text-[10px] text-gray-500 mt-1">Pastikan judul sesuai dengan persetujuan pembimbing.</p>
@@ -1192,7 +1192,7 @@
                                     className="textarea-modern min-h-[200px]" 
                                     value={formData.deskripsi} 
                                     onChange={e => setFormData({...formData, deskripsi: e.target.value})} 
-                                    placeholder="Ceritakan sejauh mana pengerjaan skripsi Anda. Contoh: Sudah menyelesaikan Bab 3, sedang menyusun kuesioner..." 
+                                    placeholder="Ceritakan sejauh mana pengerjaan tugas akhir Anda. Contoh: Sudah menyelesaikan Bab 3, sedang menyusun kuesioner..." 
                                     required 
                                 />
                             </div>
@@ -1210,10 +1210,10 @@
         
         const AdministrasiMenu = ({ setPage, config, userRole }) => {
             const menuItems = [
-                { id: 'pengajuan_judul', label: 'Pengajuan Judul', icon: PATHS.FileText, color: 'bg-blue-100 text-blue-600', desc: 'Ajukan judul skripsi baru' },
+                { id: 'pengajuan_judul', label: 'Pengajuan Judul', icon: PATHS.FileText, color: 'bg-blue-100 text-blue-600', desc: 'Ajukan judul tugas akhir baru' },
                 { id: 'sempro', label: 'Seminar Proposal', icon: PATHS.Book, color: 'bg-purple-100 text-purple-600', desc: 'Daftar ujian proposal' },
                 { id: 'semhas', label: 'Seminar Hasil', icon: PATHS.Chart, color: 'bg-pink-100 text-pink-600', desc: 'Daftar ujian hasil' },
-                { id: 'daftar_sidang', label: 'Sidang Akhir', icon: PATHS.Graduation, color: 'bg-emerald-100 text-emerald-600', desc: 'Daftar sidang skripsi' },
+                { id: 'daftar_sidang', label: 'Sidang Akhir', icon: PATHS.Graduation, color: 'bg-emerald-100 text-emerald-600', desc: 'Daftar sidang tugas akhir' },
                 { id: 'laporan_ta', label: 'Laporan Tugas Akhir', icon: PATHS.FileText, color: 'bg-cyan-100 text-cyan-600', desc: 'Upload laporan progres TA' }, 
                 { id: 'surat', label: 'Layanan Surat', icon: PATHS.Mail, color: 'bg-orange-100 text-orange-600', desc: 'Buat surat ijin riset dll' },
                 { id: 'yudisium', label: 'Pendaftaran Yudisium', icon: PATHS.Tag, color: 'bg-yellow-100 text-yellow-600', desc: 'Daftar yudisium kelulusan' },
@@ -1472,7 +1472,7 @@
                     return [
                         { label: "Cek Jadwal Saya", query: "jadwal saya", icon: PATHS.Sun },
                         { label: "Siapa Pembimbing?", query: "pembimbing saya", icon: PATHS.User },
-                        { label: "Judul Skripsi", query: "judul skripsi", icon: PATHS.FileText },
+                        { label: "Judul Tugas Akhir", query: "judul tugas akhir", icon: PATHS.FileText },
                         { label: "Bantuan", query: "bantuan", icon: PATHS.Info },
                     ];
                 } else if (userRole === 'dosen') {
@@ -1552,7 +1552,7 @@
                 }
 
                 if (q.includes('halo') || q.includes('hai')) return "Halo! Semangat mengerjakan TA ya!";
-                if (q.includes('terima kasih') || q.includes('makasih')) return "Sama-sama! Semoga dilancarkan skripsinya.";
+                if (q.includes('terima kasih') || q.includes('makasih')) return "Sama-sama! Semoga dilancarkan tugas akhirnya.";
                 if (q.includes('sempro')) return "Seminar Proposal biasanya diadakan setelah judul disetujui. Cek menu Administrasi untuk pendaftaran.";
                 if (q.includes('semhas')) return "Seminar Hasil adalah ujian presentasi hasil penelitian tengah. Pastikan laporan sudah siap!";
                 if (q.includes('login') || q.includes('masuk')) return "Silakan login menggunakan NPM (Mahasiswa) atau NIDN (Dosen/Tendik). Password default sama dengan ID.";
@@ -1700,7 +1700,7 @@
                 gform_surat: '', 
                 gform_yudisium: '',
                 gform_laporan_ta: '' 
-            }, 'sim_config_ta_v8_RESTORED'); 
+            }, 'sim_config_ta_v9_RENAMED'); 
 
             const { db, add, del, update, isOnline, refresh, importBatch, batchUpdate, isLoading, isBackgroundSyncing, lastSyncTime, save } = useDatabase(INITIAL_DB, config.scriptUrl);
 
@@ -1855,12 +1855,14 @@
                 const latestInfo = db['Informasi'] && db['Informasi'].length > 0 ? db['Informasi'][db['Informasi'].length - 1] : null;
                 const latestJadwal = db['Jadwal Ujian TA'] && db['Jadwal Ujian TA'].length > 0 ? db['Jadwal Ujian TA'][db['Jadwal Ujian TA'].length - 1] : null;
                 
+                // --- CHANGED: Check BimbinganChats for unread messages instead of 'Pesan' ---
                 const latestChat = db['BimbinganChats'] ? db['BimbinganChats'].filter(c => c.receiver === (userData ? userData.Nama : '')).pop() : null;
 
                 let notifContent = null;
 
                 if (role === 'mahasiswa' && userData) {
                     if (latestChat) {
+                        // In a real app we would check isRead flag. Here we just show the last received chat.
                         notifContent = {
                             type: 'Pesan Bimbingan Baru',
                             title: `Dari: ${latestChat.sender}`,
@@ -1961,12 +1963,12 @@
                 {key:'Pembimbing_1', label:'Pembimbing 1', type: 'select', options: dosenOptions}, 
                 {key:'Pembimbing_2', label:'Pembimbing 2', type: 'select', options: dosenOptions},
                 {key:'Penguji', label:'Penguji', type: 'select', options: dosenOptions},
-                {key:'Judul', label:'Judul Skripsi', type:'textarea'},
+                {key:'Judul', label:'Judul Tugas Akhir', type:'textarea'},
                 {key:'LinkLaporan', label:'Link Laporan GDrive (Admin)', placeholder: 'https://...'} 
             ];
 
             const PAGE_MAP = {
-                'pengajuan_judul': { title: 'Pengajuan Judul Skripsi', collection: 'Pengajuan Judul', configKey: 'Pengajuan Judul', status: 'Belum Proposal' },
+                'pengajuan_judul': { title: 'Pengajuan Judul Tugas Akhir', collection: 'Pengajuan Judul', configKey: 'Pengajuan Judul', status: 'Belum Proposal' },
                 'sempro': { title: 'Seminar Proposal', collection: 'Pendaftaran Sempro', configKey: 'Pendaftaran Sempro', status: 'Sudah Proposal' },
                 'semhas': { title: 'Seminar Hasil', collection: 'Pendaftaran Semhas', configKey: 'Pendaftaran Semhas', status: 'Sudah Hasil' },
                 'daftar_sidang': { title: 'Sidang Akhir', collection: 'Pendaftaran Sidang', configKey: 'Pendaftaran Sidang', status: 'Sudah Sidang' },
@@ -2030,7 +2032,7 @@
                                 <NavItem 
                                     name="bimbingan" 
                                     icon={PATHS.MessageSquare} 
-                                    label="Bimbingan Skripsi" 
+                                    label="Bimbingan Tugas Akhir" 
                                     onClick={()=>{setPage('bimbingan'); setMenuOpen(false)}} 
                                     isActive={page==='bimbingan'}
                                     badge={(db['BimbinganChats'] || []).filter(c => c.receiver === currentUser?.Nama).length > 0 ? (db['BimbinganChats'] || []).filter(c => c.receiver === currentUser?.Nama).length : null}
