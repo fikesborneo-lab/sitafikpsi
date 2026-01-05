@@ -63,8 +63,6 @@
             overflow: hidden; 
             color: #4c1d95; /* Deep Purple Text */
         }
-        
-        /* Background Blobs for Glass Effect */
         .blob-cont {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden; pointer-events: none;
         }
@@ -74,23 +72,17 @@
         .blob-1 { top: -10%; left: -10%; width: 600px; height: 600px; background: #c084fc; animation-delay: 0s; }
         .blob-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: #818cf8; animation-delay: 2s; }
         .blob-3 { top: 30%; left: 30%; width: 500px; height: 500px; background: #f472b6; animation-delay: 4s; opacity: 0.4; }
-
-        /* Enhanced Glassmorphism */
         .glass { 
             background: rgba(255, 255, 255, 0.65); 
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.8); 
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
-        
         .touch-scroll { -webkit-overflow-scrolling: touch; }
-        
-        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.6); }
-        
         .input-modern { 
             width: 100%; padding: 0.75rem 1rem; border-radius: 1rem; 
             background-color: rgba(255, 255, 255, 0.7); 
@@ -104,7 +96,6 @@
             box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15); 
             transform: translateY(-1px);
         }
-
         .textarea-modern {
             width: 100%; padding: 0.75rem 1rem; border-radius: 1rem; 
             background-color: rgba(255, 255, 255, 0.7); 
@@ -120,8 +111,6 @@
             box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15); 
             transform: translateY(-1px);
         }
-
-        /* Typing Indicator Animation */
         .typing-dot {
             animation: typing 1.4s infinite ease-in-out both;
         }
@@ -131,7 +120,6 @@
             0%, 80%, 100% { transform: scale(0); }
             40% { transform: scale(1); }
         }
-        
         .animate-bounce-slight { animation: bounceSlight 2s infinite; }
     </style>
 </head>
@@ -151,7 +139,6 @@
         const Icon = ({ path, className = "w-5 h-5", size = 20 }) => <svg className={className} width={size} height={size} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={path} /></svg>;
         const PATHS = {
             Home: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10",
-            Sparkles: "M9.937 15.5A2 2 0 008.5 14.063l-6.135-1.582a.5.5 0 010-.962l6.135-1.583A2 2 0 009.937 8.5l1.582-6.135a.5.5 0 01.963 0l1.582 6.135a2 2 0 001.437 1.437l6.135 1.583a.5.5 0 010 .962l-6.135 1.583a2 2 0 00-1.437 1.437l-1.582 6.135a.5.5 0 01-.963 0z",
             Lock: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
             Trash: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16",
             Plus: "M12 5v14m-7-7h14",
@@ -246,6 +233,10 @@
                 { id: 2, Nama: "Rina Wati", NPM: "2020002", Prodi: "S1 Ilmu Kesehatan Masyarakat", Angkatan: "2020", Peminatan: "KESLING", WhatsApp: "08987654321", Judul: "Higiene Sanitasi Makanan Jajanan", Pembimbing_1: "Prof. Siti Aminah", Pembimbing_2: "-", Penguji: "Dr. Budi Santoso", Status: "Sudah Proposal", StatusAkademik: "Aktif", BimbinganCount: 2, ProgresDeskripsi: "Persiapan turun lapangan", LinkLaporan: "", ProgresBab: "Penelitian" },
                 { id: 3, Nama: "Budi Setiawan", NPM: "2020003", Prodi: "S1 Psikologi", Angkatan: "2020", Peminatan: "Psikologi Industri", WhatsApp: "08123456700", Judul: "Pengaruh Work From Home Terhadap Kinerja", Pembimbing_1: "Rudi Hermawan, M.Kes", Pembimbing_2: "-", Penguji: "-", Status: "Belum Proposal", StatusAkademik: "Cuti", BimbinganCount: 0, ProgresDeskripsi: "-", LinkLaporan: "", ProgresBab: "Pengambilan data awal proposal" },
             ],
+            // --- NEW: DATA MAHASISWA LULUSAN ---
+            'Mahasiswa Lulusan': [
+                { id: 1, Nama: "Budi Santoso Alumni", NPM: "1900001", Pembimbing_1: "Dr. Budi Santoso", Pembimbing_2: "Rudi Hermawan, M.Kes", Penguji: "Prof. Siti Aminah", Peminatan: "EPID", TanggalSidang: "2023-08-20", Judul: "Analisis Spasial DBD di Kota Pontianak", TahunWisuda: "2023", Link_ACC: "https://drive.google.com", Link_Naskah: "https://drive.google.com", Link_Jurnal: "https://drive.google.com" }
+            ],
             'Jadwal Ujian TA': [
                 { id: 1, Mahasiswa: "Rina Wati", Jenis: "Seminar Proposal", Tanggal: "2024-12-15", Jam: "09:00", Ruang: "R. Sidang 1", Penguji_1: "Dr. Budi Santoso" }
             ],
@@ -254,6 +245,11 @@
             ],
             'Informasi': [
                 { id: 1, Judul: "Jadwal Libur Semester", Isi: "Libur dimulai tanggal 25 Desember hingga 5 Januari.", Penulis: "Admin", Tanggal: "2024-12-20", Tipe: "Umum" }
+            ],
+            'ChatbotKnowledgeBase': [
+                { id: 1, keywords: "biaya, bayar, ukt", answer: "Biaya pendaftaran sidang adalah gratis, namun pastikan UKT semester berjalan sudah lunas.", category: "Administrasi" },
+                { id: 2, keywords: "syarat, dokumen, berkas", answer: "Syarat pendaftaran sidang: 1. Lulus semua mata kuliah (transkrip), 2. Bebas pustaka, 3. Bukti lunas UKT, 4. Naskah skripsi yang sudah di-ACC pembimbing.", category: "Akademik" },
+                { id: 3, keywords: "wisuda, kapan", answer: "Jadwal wisuda periode berikutnya diperkirakan bulan November. Pantau terus papan informasi.", category: "Umum" }
             ],
             'BimbinganChats': [
                 { id: 1, sender: "Ahmad Dani", receiver: "Dr. Budi Santoso", message: "Selamat pagi Dok, izin mengirimkan revisi Bab 1.", timestamp: new Date().toISOString(), type: 'text' },
@@ -312,6 +308,23 @@
                     {key:'ProgresDeskripsi', label:'Ket. Progres', render: (v) => <span className="text-xs text-gray-600 italic truncate max-w-[150px] block">{v ? (v.length > 25 ? v.substring(0,25)+'...' : v) : '-'}</span>}
                 ], 
                 form: [] 
+            },
+            // --- UPDATED: CONFIG UNTUK MAHASISWA LULUSAN (MINIMALIS) ---
+            'Mahasiswa Lulusan': {
+                columns: [
+                    {key:'Nama', label:'Nama'},
+                    {key:'NPM', label:'NPM'},
+                    {key:'TahunWisuda', label:'Tahun Lulus'},
+                    {key:'Links', label:'Dokumen Lulusan', render: (_, row) => (
+                        <div className="flex flex-wrap gap-1">
+                            {row.Link_ACC && <a href={row.Link_ACC} target="_blank" className="text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-1 rounded-md hover:bg-green-200 flex items-center gap-1 font-bold" title="Lembar ACC"><Icon path={PATHS.CheckCircle} size={10}/> ACC</a>}
+                            {row.Link_Naskah && <a href={row.Link_Naskah} target="_blank" className="text-[10px] bg-blue-100 text-blue-700 border border-blue-200 px-2 py-1 rounded-md hover:bg-blue-200 flex items-center gap-1 font-bold" title="Dokumen TA"><Icon path={PATHS.FileText} size={10}/> Naskah</a>}
+                            {row.Link_Jurnal && <a href={row.Link_Jurnal} target="_blank" className="text-[10px] bg-purple-100 text-purple-700 border border-purple-200 px-2 py-1 rounded-md hover:bg-purple-200 flex items-center gap-1 font-bold" title="Dokumen Jurnal"><Icon path={PATHS.Book} size={10}/> Jurnal</a>}
+                            {(!row.Link_ACC && !row.Link_Naskah && !row.Link_Jurnal) && <span className="text-[10px] text-gray-300 italic">Tidak ada</span>}
+                        </div>
+                    )}
+                ],
+                form: [] // Form is defined dynamically in App
             },
             'Tugas Akhir Mahasiswa (Dosen)': {
                 columns: [
@@ -373,6 +386,18 @@
                     {key:'Tanggal', label:'Tanggal', type:'date'}
                 ]
             },
+            'ChatbotKnowledgeBase': {
+                columns: [
+                    {key:'keywords', label:'Kata Kunci'},
+                    {key:'answer', label:'Jawaban Bot', render: (v) => <span className="block truncate max-w-xs" title={v}>{v}</span>},
+                    {key:'category', label:'Kategori'}
+                ],
+                form: [
+                    {key:'keywords', label:'Kata Kunci (Pisahkan dengan koma)', placeholder: 'contoh: biaya, ukt, bayar'},
+                    {key:'answer', label:'Jawaban Bot', type: 'textarea', placeholder: 'Jawaban yang akan muncul...'},
+                    {key:'category', label:'Kategori', type: 'select', options:[{value:'Akademik', label:'Akademik'}, {value:'Administrasi', label:'Administrasi'}, {value:'Umum', label:'Umum'}]}
+                ]
+            },
             'Pengajuan Judul': {
                 columns: [{key:'Nama', label:'Nama'}, {key:'NPM', label:'NPM'}, {key:'Judul', label:'Usulan Judul'}, {key:'Peminatan', label:'Peminatan'}],
                 form: [{key:'Nama', label:'Nama Lengkap'}, {key:'NPM', label:'NPM'}, {key:'Peminatan', label:'Peminatan', type: 'select', options:[]}, {key:'Judul', label:'Usulan Judul Penelitian'}, {key:'Masalah', label:'Rumusan Masalah Singkat', type:'text'}]
@@ -394,7 +419,7 @@
         };
 
         const useDatabase = (initialData, scriptUrl) => {
-            const [localData, setLocalData] = useStickyState(initialData, 'sim_tugasakhir_db_v10_progresbab'); 
+            const [localData, setLocalData] = useStickyState(initialData, 'sim_tugasakhir_db_v12_lulusan'); 
             const [isOnline, setIsOnline] = useState(false);
             const [isLoading, setIsLoading] = useState(false);
             const [isBackgroundSyncing, setIsBackgroundSyncing] = useState(false);
@@ -466,7 +491,6 @@
             return { db: localData, ...crud, isOnline, isLoading, isBackgroundSyncing, lastSyncTime, refresh: () => scriptUrl && syncData(scriptUrl, false) };
         };
 
-        // --- COMPONENTS ---
         const LoginCard = ({ isModal = false, db, handleRoleLogin, setShowLogin, onRefresh, isLoading }) => {
             const [loginRole, setLoginRole] = useState(null); 
             const [idInput, setIdInput] = useState('');
@@ -560,8 +584,6 @@
             </div>
         );
 
-        // --- NEW BIMBINGAN COMPONENTS ---
-
         const StatusBadge = ({ status }) => {
             const styles = {
                 approved: 'bg-green-100 text-green-700 border-green-200',
@@ -606,7 +628,7 @@
 
             const myStudents = useMemo(() => {
                 if (userRole !== 'dosen') return [];
-                return (db['Mahasiswa Tugas Akhir'] || []).filter(m =>   
+                return (db['Mahasiswa Tugas Akhir'] || []).filter(m =>    
                     m.Pembimbing_1 === currentUser.Nama || m.Pembimbing_2 === currentUser.Nama
                 );
             }, [db, currentUser]);
@@ -670,14 +692,14 @@
                                 const isMe = chat.sender === currentUser.Nama;
                                 return (
                                     <div key={chat.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-                                        <div className={`max-w-[85%] md:max-w-[70%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                                            <div className={`p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isMe ? 'bg-purple-600 text-white rounded-br-none' : 'bg-white border border-purple-100 text-gray-700 rounded-bl-none'}`}>
-                                                <p>{chat.message}</p>
+                                            <div className={`max-w-[85%] md:max-w-[70%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                                                <div className={`p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isMe ? 'bg-purple-600 text-white rounded-br-none' : 'bg-white border border-purple-100 text-gray-700 rounded-bl-none'}`}>
+                                                    <p>{chat.message}</p>
+                                                </div>
+                                                <span className="text-[10px] text-gray-400 mt-1 px-1 flex items-center gap-1">
+                                                    {formatDateId(chat.timestamp, true)}
+                                                </span>
                                             </div>
-                                            <span className="text-[10px] text-gray-400 mt-1 px-1 flex items-center gap-1">
-                                                {formatDateId(chat.timestamp, true)}
-                                            </span>
-                                        </div>
                                     </div>
                                 );
                             })
@@ -758,29 +780,29 @@
                             ) : (
                                 mySchedules.map(item => (
                                     <div key={item.id} className="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition">
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex gap-4">
-                                                <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center border ${item.status === 'approved' ? 'bg-green-50 border-green-200 text-green-700' : item.status === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
-                                                    <span className="text-[10px] font-bold uppercase">{new Date(item.date).toLocaleString('default', { month: 'short' })}</span>
-                                                    <span className="text-lg font-bold leading-none">{new Date(item.date).getDate()}</span>
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-bold text-gray-800 text-sm">{item.topic}</h4>
-                                                    <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
-                                                        <Icon path={PATHS.Clock} size={12} /> {item.time} 
-                                                        <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                                                        {userRole === 'mahasiswa' ? item.advisorName : item.studentName}
+                                            <div className="flex justify-between items-start">
+                                                <div className="flex gap-4">
+                                                    <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center border ${item.status === 'approved' ? 'bg-green-50 border-green-200 text-green-700' : item.status === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
+                                                        <span className="text-[10px] font-bold uppercase">{new Date(item.date).toLocaleString('default', { month: 'short' })}</span>
+                                                        <span className="text-lg font-bold leading-none">{new Date(item.date).getDate()}</span>
                                                     </div>
-                                                    <div className="mt-1"><StatusBadge status={item.status} /></div>
+                                                    <div>
+                                                        <h4 className="font-bold text-gray-800 text-sm">{item.topic}</h4>
+                                                        <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                                            <Icon path={PATHS.Clock} size={12} /> {item.time} 
+                                                            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                                                            {userRole === 'mahasiswa' ? item.advisorName : item.studentName}
+                                                        </div>
+                                                        <div className="mt-1"><StatusBadge status={item.status} /></div>
+                                                    </div>
                                                 </div>
+                                                {userRole === 'dosen' && item.status === 'pending' && (
+                                                    <div className="flex flex-col gap-1">
+                                                        <button onClick={() => onUpdate('BimbinganJadwal', item.id, { status: 'approved' })} className="p-1.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200"><Icon path={PATHS.CheckCircle} size={16}/></button>
+                                                        <button onClick={() => onUpdate('BimbinganJadwal', item.id, { status: 'rejected' })} className="p-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"><Icon path={PATHS.X} size={16}/></button>
+                                                    </div>
+                                                )}
                                             </div>
-                                            {userRole === 'dosen' && item.status === 'pending' && (
-                                                <div className="flex flex-col gap-1">
-                                                    <button onClick={() => onUpdate('BimbinganJadwal', item.id, { status: 'approved' })} className="p-1.5 bg-green-100 text-green-600 rounded-lg hover:bg-green-200"><Icon path={PATHS.CheckCircle} size={16}/></button>
-                                                    <button onClick={() => onUpdate('BimbinganJadwal', item.id, { status: 'rejected' })} className="p-1.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200"><Icon path={PATHS.X} size={16}/></button>
-                                                </div>
-                                            )}
-                                        </div>
                                     </div>
                                 ))
                             )}
@@ -790,7 +812,6 @@
             );
         };
 
-        // --- NEW PROGRES COMPONENT FOR LECTURER ---
         const LecturerProgressDashboard = ({ currentUser, db }) => {
             const myStudents = useMemo(() => {
                 if (!currentUser?.Nama) return [];
@@ -855,22 +876,22 @@
                                     </div>
                                     
                                     <div className="md:w-1/3 bg-white/50 p-3 rounded-xl border border-white">
-                                        <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Status Tahap</div>
-                                        <div className="text-sm font-bold text-purple-900 mb-2">{student.Status}</div>
-                                        
-                                        <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Update Terakhir</div>
-                                        <div className="text-xs text-gray-600">
-                                            {student.LastUpdateProgres 
-                                                ? formatDateId(student.LastUpdateProgres, true)
-                                                : '-'
-                                            }
-                                        </div>
-                                        
-                                        {student.ProgresDeskripsi && (
-                                            <div className="mt-2 pt-2 border-t border-gray-100">
-                                                <div className="text-[10px] text-gray-400 italic">"{student.ProgresDeskripsi.length > 40 ? student.ProgresDeskripsi.substring(0,40)+'...' : student.ProgresDeskripsi}"</div>
+                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Status Tahap</div>
+                                            <div className="text-sm font-bold text-purple-900 mb-2">{student.Status}</div>
+                                            
+                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Update Terakhir</div>
+                                            <div className="text-xs text-gray-600">
+                                                {student.LastUpdateProgres 
+                                                    ? formatDateId(student.LastUpdateProgres, true)
+                                                    : '-'
+                                                }
                                             </div>
-                                        )}
+                                            
+                                            {student.ProgresDeskripsi && (
+                                                <div className="mt-2 pt-2 border-t border-gray-100">
+                                                    <div className="text-[10px] text-gray-400 italic">"{student.ProgresDeskripsi.length > 40 ? student.ProgresDeskripsi.substring(0,40)+'...' : student.ProgresDeskripsi}"</div>
+                                                </div>
+                                            )}
                                     </div>
                                 </div>
                             </div>
@@ -904,7 +925,6 @@
                             <p className="text-purple-600">Pantau progres, diskusi revisi, dan atur jadwal.</p>
                         </div>
                         <div className="flex bg-white/50 p-1 rounded-xl border border-white/60 shadow-sm">
-                            {/* Lecturer gets Progres Tab instead of Dokumen */}
                             {userRole === 'dosen' ? (
                                 ['dashboard', 'chat', 'jadwal', 'progres'].map(tab => (
                                     <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === tab ? 'bg-purple-600 text-white shadow-md' : 'text-purple-600 hover:bg-purple-100'}`}>
@@ -954,22 +974,22 @@
                     )}
 
                     {activeTab === 'chat' && (
-                        <GuidanceRoom   
-                            currentUser={currentUser}   
-                            userRole={userRole}   
+                        <GuidanceRoom    
+                            currentUser={currentUser}    
+                            userRole={userRole}    
                             db={db}
-                            chats={db['BimbinganChats'] || []}   
-                            onSend={(msg) => { add('BimbinganChats', { ...msg, timestamp: new Date().toISOString() }); }}   
+                            chats={db['BimbinganChats'] || []}    
+                            onSend={(msg) => { add('BimbinganChats', { ...msg, timestamp: new Date().toISOString() }); }}    
                         />
                     )}
 
                     {activeTab === 'jadwal' && (
-                        <ScheduleManager   
-                            currentUser={currentUser}   
-                            userRole={userRole}   
+                        <ScheduleManager    
+                            currentUser={currentUser}    
+                            userRole={userRole}    
                             db={db}
-                            schedules={db['BimbinganJadwal'] || []}   
-                            onAdd={(data) => add('BimbinganJadwal', data)}   
+                            schedules={db['BimbinganJadwal'] || []}    
+                            onAdd={(data) => add('BimbinganJadwal', data)}    
                             onUpdate={(col, id, data) => update(col, id, data)}
                         />
                     )}
@@ -981,7 +1001,6 @@
                         </div>
                     )}
 
-                    {/* --- NEW TAB FOR LECTURER --- */}
                     {activeTab === 'progres' && userRole === 'dosen' && (
                         <LecturerProgressDashboard 
                             currentUser={currentUser} 
@@ -989,6 +1008,354 @@
                         />
                     )}
                 </div>
+            );
+        };
+
+        // --- UPDATED: ADMINISTRASI MENU (INLINE GFORM EDIT) ---
+        const AdministrasiMenu = ({ setPage, config, setConfig, userRole }) => {
+            const [editingId, setEditingId] = useState(null);
+            const [tempLink, setTempLink] = useState('');
+
+            const menuItems = [
+                { id: 'pengajuan_judul', label: 'Pengajuan Judul', icon: PATHS.FileText, color: 'bg-blue-100 text-blue-600', desc: 'Ajukan judul tugas akhir baru' },
+                { id: 'sempro', label: 'Seminar Proposal', icon: PATHS.Book, color: 'bg-purple-100 text-purple-600', desc: 'Daftar ujian proposal' },
+                { id: 'semhas', label: 'Seminar Hasil', icon: PATHS.Chart, color: 'bg-pink-100 text-pink-600', desc: 'Daftar ujian hasil' },
+                { id: 'daftar_sidang', label: 'Sidang Akhir', icon: PATHS.Graduation, color: 'bg-emerald-100 text-emerald-600', desc: 'Daftar sidang tugas akhir' },
+                { id: 'laporan_ta', label: 'Laporan Tugas Akhir', icon: PATHS.FileText, color: 'bg-cyan-100 text-cyan-600', desc: 'Upload laporan progres TA' },  
+                { id: 'surat', label: 'Layanan Surat', icon: PATHS.Mail, color: 'bg-orange-100 text-orange-600', desc: 'Buat surat ijin riset dll' },
+                { id: 'yudisium', label: 'Pendaftaran Yudisium', icon: PATHS.Tag, color: 'bg-yellow-100 text-yellow-600', desc: 'Daftar yudisium kelulusan' },
+                { id: 'peminatan', label: 'Data Peminatan', icon: PATHS.Cog, color: 'bg-slate-100 text-slate-600', desc: 'Kelola data peminatan' },
+            ];
+
+            const visibleItems = menuItems.filter(item => {
+                if (userRole === 'mahasiswa' && item.id === 'peminatan') return false;
+                return true;
+            });
+
+            const handleEditClick = (id, currentLink) => {
+                setEditingId(id);
+                setTempLink(currentLink || '');
+            };
+
+            const handleSaveLink = (id, configKey) => {
+                setConfig(prev => ({ ...prev, [configKey]: tempLink }));
+                setEditingId(null);
+            };
+
+            return (
+                <div className="space-y-8 animate-fade-in pb-20">
+                    <div>
+                        <h2 className="text-3xl font-bold text-purple-900 mb-2">Administrasi Akademik</h2>
+                        <p className="text-purple-600">Pilih menu layanan administrasi yang tersedia di bawah ini.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {visibleItems.map((item, idx) => {
+                            const configKey = item.id === 'daftar_sidang' ? 'gform_sidang' : `gform_${item.id}`;
+                            // Peminatan usually doesn't have a gform, exclude it from link logic if needed, or keep it generic
+                            const hasGformSupport = item.id !== 'peminatan'; 
+                            const gformUrl = config[configKey];
+
+                            return (
+                                <div key={item.id} className="relative group h-full" style={{animationDelay: `${idx * 100}ms`}}>
+                                    <div className="glass p-6 rounded-3xl border border-white/60 shadow-lg hover:shadow-purple-500/20 transition duration-300 flex flex-col h-full relative overflow-hidden">
+                                             
+                                            <button 
+                                                onClick={() => setPage(item.id)}
+                                                className="flex items-center gap-6 text-left flex-1 outline-none w-full"
+                                            >
+                                                <div className={`absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4 scale-150 group-hover:scale-175 transition duration-500 pointer-events-none`}>
+                                                    <Icon path={item.icon} size={100} />
+                                                </div>
+
+                                                <div className={`w-16 h-16 rounded-2xl ${item.color} flex-shrink-0 flex items-center justify-center shadow-inner group-hover:scale-110 transition duration-300`}>
+                                                    <Icon path={item.icon} size={32}/>
+                                                </div>
+                                                <div className="relative z-10">
+                                                    <span className="font-bold text-lg text-purple-900 group-hover:text-purple-700 transition block">{item.label}</span>
+                                                    <span className="text-xs text-gray-500 group-hover:text-gray-600">{item.desc}</span>
+                                                </div>
+                                            </button>
+
+                                            {hasGformSupport && (
+                                                <div className="relative z-20 mt-4 pt-4 border-t border-purple-100">
+                                                    {userRole === 'admin' && editingId === item.id ? (
+                                                        <div className="flex flex-col gap-2">
+                                                            <input 
+                                                                type="text" 
+                                                                className="input-modern text-xs py-1 px-2" 
+                                                                placeholder="Paste Link Google Form..."
+                                                                value={tempLink}
+                                                                onChange={e => setTempLink(e.target.value)}
+                                                                autoFocus
+                                                            />
+                                                            <div className="flex gap-2">
+                                                                <button onClick={() => handleSaveLink(item.id, configKey)} className="flex-1 bg-green-500 text-white text-xs py-1 rounded-lg">Simpan</button>
+                                                                <button onClick={() => setEditingId(null)} className="flex-1 bg-gray-300 text-gray-700 text-xs py-1 rounded-lg">Batal</button>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex items-center gap-2">
+                                                            {gformUrl ? (
+                                                                <a    
+                                                                    href={gformUrl}    
+                                                                    target="_blank"    
+                                                                    className="flex-1 py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold rounded-xl text-center shadow-md hover:shadow-lg hover:shadow-purple-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                                                                >
+                                                                    <Icon path={PATHS.ExternalLink} size={14}/> Daftar via GForm
+                                                                </a>
+                                                            ) : (
+                                                                <div className="flex-1 py-2.5 px-4 bg-gray-100 text-gray-400 text-xs font-bold rounded-xl text-center border border-gray-200 cursor-not-allowed">
+                                                                    Link Belum Tersedia
+                                                                </div>
+                                                            )}
+                                                            
+                                                            {userRole === 'admin' && (
+                                                                <button 
+                                                                    onClick={() => handleEditClick(item.id, gformUrl)} 
+                                                                    className="p-2.5 bg-white border border-purple-200 text-purple-600 rounded-xl hover:bg-purple-50 transition shadow-sm"
+                                                                    title="Edit Link GForm"
+                                                                >
+                                                                    <Icon path={PATHS.Edit} size={14}/>
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const ChatBot = ({ db, currentUser, userRole, isOpen, onToggle }) => {
+            const [input, setInput] = useState('');
+            const [messages, setMessages] = useState([
+                { id: 1, text: "Halo! Ada yang bisa saya bantu?", sender: 'bot' }
+            ]);
+            const [isTyping, setIsTyping] = useState(false);
+            const chatEndRef = useRef(null);
+
+            useEffect(() => {
+                if (chatEndRef.current) {
+                    chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, [messages, isOpen]);
+
+            const quickActions = useMemo(() => {
+                if (userRole === 'mahasiswa') {
+                    return [
+                        { label: "Cek Jadwal Saya", query: "jadwal saya", icon: PATHS.Sun },
+                        { label: "Siapa Pembimbing?", query: "pembimbing saya", icon: PATHS.User },
+                        { label: "Judul Tugas Akhir", query: "judul tugas akhir", icon: PATHS.FileText },
+                        { label: "Bantuan", query: "bantuan", icon: PATHS.Info },
+                    ];
+                } else if (userRole === 'dosen') {
+                    return [
+                        { label: "Data Bimbingan", query: "data bimbingan saya", icon: PATHS.Users },
+                        { label: "Cek Jadwal", query: "jadwal ujian", icon: PATHS.Sun },
+                        { label: "Beban Kerja", query: "beban kerja", icon: PATHS.Chart },
+                        { label: "Pusat Bantuan", query: "bantuan", icon: PATHS.Info },
+                    ];
+                }
+                return [];
+            }, [userRole]);
+
+            const generateBotResponse = (query, db, currentUser) => {
+                const q = query.toLowerCase();
+                
+                const knowledgeBase = db['ChatbotKnowledgeBase'] || [];
+                const kbMatch = knowledgeBase.find(item => {
+                    const keywords = item.keywords ? item.keywords.toLowerCase().split(',') : [];
+                    return keywords.some(k => q.includes(k.trim()) && k.trim() !== '');
+                });
+
+                if (kbMatch) {
+                    return kbMatch.answer;
+                }
+
+                if (userRole === 'mahasiswa') {
+                    if (q.includes('jadwal saya') || q.includes('kapan ujian')) {
+                        const mySchedule = (db['Jadwal Ujian TA'] || []).filter(j => j.Mahasiswa === currentUser.Nama);
+                        if (mySchedule.length > 0) {
+                            return `Jadwal Anda:\n${mySchedule.map(j => `- ${j.Jenis}: ${formatDateId(j.Tanggal)} jam ${j.Jam} di ${j.Ruang}`).join('\n')}`;
+                        } else {
+                            return "Saya tidak menemukan jadwal ujian untuk nama Anda saat ini.";
+                        }
+                    }
+                    if (q.includes('pembimbing') || q.includes('dosen saya')) {
+                        const p1 = currentUser.Pembimbing_1;
+                        const p2 = currentUser.Pembimbing_2;
+                        if (p1 && p2) return `Pembimbing Anda adalah ${p1} (Pembimbing 1) dan ${p2} (Pembimbing 2).`;
+                        if (p1) return `Pembimbing Anda adalah ${p1}.`;
+                        return "Data pembimbing belum tersedia.";
+                    }
+                    if (q.includes('judul') || q.includes('topik')) {
+                        return `Judul TA Anda saat ini: "${currentUser.Judul || '-'}"`;
+                    }
+                }
+
+                if (userRole === 'dosen' && q.includes('data bimbingan')) {
+                    const myStudents = (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
+                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                        const myName = String(currentUser.Nama).trim().toLowerCase();
+                        return p1 === myName || p2 === myName;
+                    });
+                    
+                    if (myStudents.length > 0) {
+                        return `Daftar ${myStudents.length} mahasiswa bimbingan Anda:\n${myStudents.map(m => `- ${m.Nama} (${m.NPM}) - ${m.Status}`).join('\n')}`;
+                    } else {
+                        return "Anda belum memiliki data mahasiswa bimbingan.";
+                    }
+                }
+                
+                if (userRole === 'dosen' && q.includes('beban kerja')) {
+                     const total = (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
+                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                        const myName = String(currentUser.Nama).trim().toLowerCase();
+                        return p1 === myName || p2 === myName;
+                     }).length;
+                     return `Total beban kerja bimbingan Anda saat ini adalah ${total} mahasiswa.`;
+                }
+
+                if (q.includes('cari jadwal') || q.includes('jadwal')) {
+                    const nameKeywords = q.replace('cari jadwal', '').replace('jadwal', '').trim();
+                    if (nameKeywords.length > 3) {
+                        const results = (db['Jadwal Ujian TA'] || []).filter(j => 
+                            j.Mahasiswa.toLowerCase().includes(nameKeywords)
+                        );
+                        if (results.length > 0) {
+                            return `Ditemukan ${results.length} jadwal:\n${results.map(j => `- ${j.Mahasiswa}: ${j.Jenis} tgl ${formatDateId(j.Tanggal)}`).join('\n')}`;
+                        }
+                        return `Maaf, saya tidak menemukan jadwal untuk "${nameKeywords}".`;
+                    }
+                    return "Untuk mencari jadwal, ketik 'Cari jadwal [Nama Mahasiswa]'.";
+                }
+
+                if (q.includes('halo') || q.includes('hai')) return "Halo! Semangat mengerjakan TA ya!";
+                if (q.includes('terima kasih') || q.includes('makasih')) return "Sama-sama! Semoga dilancarkan tugas akhirnya.";
+                if (q.includes('login') || q.includes('masuk')) return "Silakan login menggunakan NPM (Mahasiswa) atau NIDN (Dosen/Tendik). Password default sama dengan ID.";
+                
+                return "Maaf, saya kurang paham. Coba tanyakan tentang 'jadwal', 'pembimbing', atau 'cari jadwal [nama]'.";
+            };
+
+            const handleSend = (e) => {
+                e.preventDefault();
+                if (!input.trim()) return;
+
+                const userMsg = { id: Date.now(), text: input, sender: 'user' };
+                setMessages(prev => [...prev, userMsg]);
+                setInput('');
+                setIsTyping(true);
+
+                setTimeout(() => {
+                    const botResponseText = generateBotResponse(userMsg.text, db, currentUser);
+                    const botMsg = { id: Date.now() + 1, text: botResponseText, sender: 'bot' };
+                    setMessages(prev => [...prev, botMsg]);
+                    setIsTyping(false);
+                }, 1000);
+            };
+
+            return (
+                <>
+                    {!isOpen && (
+                        <button 
+                            onClick={onToggle}
+                            className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl shadow-purple-500/40 flex items-center justify-center text-white z-50 hover:scale-110 transition transform animate-bounce-slight"
+                            title="Buka Chat"
+                        >
+                            <Icon path={PATHS.MessageCircle} size={32} />
+                        </button>
+                    )}
+
+                    {isOpen && (
+                        <div className="fixed bottom-6 right-6 md:right-6 w-[calc(100%-2rem)] md:w-96 h-[500px] bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 z-50 flex flex-col animate-slide-up overflow-hidden">
+                            
+                            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 flex items-center justify-between text-white shadow-lg">
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                                            <Icon path={PATHS.Robot} size={20}/>
+                                        </div>
+                                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-purple-600 animate-pulse"></div>
+                                    </div>
+                                    <div>
+                                        <h3 className="font-bold text-sm">FIKPsi Bot</h3>
+                                        <p className="text-[10px] text-white/70">Online • Otomatis</p>
+                                    </div>
+                                </div>
+                                <button onClick={onToggle} className="p-1 hover:bg-white/20 rounded-full transition">
+                                    <Icon path={PATHS.Minimize2} size={20} />
+                                </button>
+                            </div>
+
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-purple-50/30 custom-scrollbar">
+                                {messages.map((msg, index) => (
+                                    <div key={msg.id}>
+                                        <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                            <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
+                                                msg.sender === 'user' 
+                                                    ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-br-none' 
+                                                    : 'bg-white text-gray-700 border border-purple-100 rounded-bl-none'
+                                            }`}>
+                                                <span className="whitespace-pre-wrap leading-relaxed">{msg.text}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        {msg.sender === 'bot' && index === 0 && quickActions.length > 0 && (
+                                            <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
+                                                {quickActions.map((action, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => handleSend({ preventDefault: () => {}, target: { value: action.query } })}
+                                                        className="px-3 py-1.5 bg-white border border-purple-200 text-purple-700 rounded-full text-xs font-bold shadow-sm hover:bg-purple-50 hover:border-purple-400 transition flex items-center gap-2"
+                                                    >
+                                                        <Icon path={action.icon} size={12} />
+                                                        {action.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                {isTyping && (
+                                    <div className="flex justify-start">
+                                        <div className="bg-white border border-purple-100 p-3 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-1">
+                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
+                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
+                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
+                                        </div>
+                                    </div>
+                                )}
+                                <div ref={chatEndRef} />
+                            </div>
+
+                            <form onSubmit={handleSend} className="p-3 bg-white border-t border-purple-100 flex items-center gap-2">
+                                <input 
+                                    type="text" 
+                                    className="flex-1 bg-purple-50 border border-purple-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
+                                    placeholder="Ketik pertanyaan..."
+                                    value={input}
+                                    onChange={e => setInput(e.target.value)}
+                                    autoComplete="off"
+                                />
+                                <button 
+                                    type="submit" 
+                                    disabled={!input.trim()}
+                                    className="p-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                                >
+                                    <Icon path={PATHS.Send} size={18} />
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </>
             );
         };
 
@@ -1113,8 +1480,8 @@
                             <tbody className="divide-y divide-purple-50">
                                 {filtered.map((row, idx)=>(
                                     <tr key={row.id} className="hover:bg-purple-50/60 transition duration-150 group" style={{animationDelay: `${idx*50}ms`}}>
-                                        {columns.map(c=><td key={c.key} className="px-6 py-4 text-purple-900 font-medium whitespace-nowrap">{(c.key === 'Nama' || c.key === 'Mahasiswa' || c.key === 'Judul') ? <button onClick={() => {setDetailItem(row); setIsEditing(false);}} className="flex items-center gap-2 font-bold hover:text-pink-600 transition-colors text-left"><div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-200 to-pink-200 flex items-center justify-center text-purple-700 text-xs shadow-inner">{row[c.key].substring(0,2).toUpperCase()}</div><span className="truncate max-w-[200px] block">{row[c.key]}</span></button> : (c.render ? c.render(row[c.key], row) : row[c.key])}</td>)}
-                                        {allowDelete && <td className="px-6 py-4 text-center"><button onClick={()=>onDel(row.id)} className="text-red-300 hover:text-red-600 bg-red-50/0 hover:bg-red-50 p-2 rounded-lg transition"><Icon path={PATHS.Trash}/></button></td>}
+                                            {columns.map(c=><td key={c.key} className="px-6 py-4 text-purple-900 font-medium whitespace-nowrap">{(c.key === 'Nama' || c.key === 'Mahasiswa' || c.key === 'Judul') ? <button onClick={() => {setDetailItem(row); setIsEditing(false);}} className="flex items-center gap-2 font-bold hover:text-pink-600 transition-colors text-left"><div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-200 to-pink-200 flex items-center justify-center text-purple-700 text-xs shadow-inner">{row[c.key].substring(0,2).toUpperCase()}</div><span className="truncate max-w-[200px] block">{row[c.key]}</span></button> : (c.render ? c.render(row[c.key], row) : row[c.key])}</td>)}
+                                            {allowDelete && <td className="px-6 py-4 text-center"><button onClick={()=>onDel(row.id)} className="text-red-300 hover:text-red-600 bg-red-50/0 hover:bg-red-50 p-2 rounded-lg transition"><Icon path={PATHS.Trash}/></button></td>}
                                     </tr>
                                 ))}
                             </tbody>
@@ -1144,7 +1511,15 @@
                                                 Pembimbing_2: 'Pembimbing 2',
                                                 Jenis_Surat: 'Jenis Surat',
                                                 LinkLaporan: 'Link Laporan (G Drive)',
-                                                ProgresBab: 'Sedang Mengerjakan'
+                                                ProgresBab: 'Sedang Mengerjakan',
+                                                keywords: 'Kata Kunci',
+                                                answer: 'Jawaban Bot',
+                                                category: 'Kategori',
+                                                TahunWisuda: 'Tahun Wisuda',
+                                                Link_ACC: 'Lembar ACC',
+                                                Link_Naskah: 'Dokumen TA',
+                                                Link_Jurnal: 'Dokumen Jurnal',
+                                                TanggalSidang: 'Tanggal Sidang'
                                             };
                                             const displayLabel = labelMap[key] || key.replace(/_/g, ' ');
 
@@ -1162,7 +1537,7 @@
                                                 <div key={key} className="grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-4 border-b border-purple-50 pb-2 last:border-0">
                                                     <div className="text-xs font-bold text-purple-400 uppercase tracking-wider pt-1">{displayLabel}</div>
                                                     <div className="md:col-span-2 text-gray-800 font-medium text-sm break-words whitespace-pre-wrap">
-                                                        {(typeof displayValue === 'string' && displayValue.startsWith('http')) ?   
+                                                        {(typeof displayValue === 'string' && displayValue.startsWith('http')) ?    
                                                             <a href={displayValue} target="_blank" className="text-blue-600 hover:underline flex items-center gap-1"><Icon path={PATHS.ExternalLink} size={14}/> Buka Link</a> : (displayValue || "-")}
                                                     </div>
                                                 </div>
@@ -1216,26 +1591,8 @@
 
         const StudentProgress = ({ db, currentUser, onUpdate }) => {
             const studentData = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.NPM === currentUser.NPM);
-            
-            // Opsi Progres Bab
-            const babOptions = [
-                'Pengambilan data awal proposal',
-                'Bab 1',
-                'Bab 2',
-                'Bab 3',
-                'Bab 4',
-                'Bab 5',
-                'Bab 6',
-                'Penelitian'
-            ];
-
-            const [formData, setFormData] = useState({
-                judul: '',
-                bimbingan: 0,
-                deskripsi: '',
-                bab: 'Pengambilan data awal proposal'
-            });
-
+            const babOptions = ['Pengambilan data awal proposal','Bab 1','Bab 2','Bab 3','Bab 4','Bab 5','Bab 6','Penelitian'];
+            const [formData, setFormData] = useState({ judul: '', bimbingan: 0, deskripsi: '', bab: 'Pengambilan data awal proposal' });
             const [isDataLoaded, setIsDataLoaded] = useState(false);
 
             useEffect(() => {
@@ -1253,178 +1610,32 @@
             const handleSubmit = (e) => {
                 e.preventDefault();
                 if (!studentData) return alert("Data mahasiswa tidak ditemukan.");
-                
                 onUpdate('Mahasiswa Tugas Akhir', studentData.id, {
                     Judul: formData.judul,
                     BimbinganCount: parseInt(formData.bimbingan),
                     ProgresDeskripsi: formData.deskripsi,
-                    ProgresBab: formData.bab, // Menyimpan bab yang dipilih
+                    ProgresBab: formData.bab,
                     LastUpdateProgres: new Date().toISOString()
                 });
                 alert("Data Tugas Akhir & Progres berhasil diperbarui!");
             };
 
-            if (!studentData) return <div className="p-8 text-center text-gray-500">Data mahasiswa tidak ditemukan. Hubungi admin.</div>;
+            if (!studentData) return <div className="p-8 text-center text-gray-500">Data mahasiswa tidak ditemukan.</div>;
 
             return (
                 <div className="max-w-3xl mx-auto animate-fade-in">
-                    <h2 className="text-2xl font-bold text-purple-900 mb-6 flex items-center gap-3">
-                        <Icon path={PATHS.Chart} className="text-pink-500"/> Data & Progres Tugas Akhir
-                    </h2>
-                    
+                    <h2 className="text-2xl font-bold text-purple-900 mb-6 flex items-center gap-3"><Icon path={PATHS.Chart} className="text-pink-500"/> Data & Progres Tugas Akhir</h2>
                     <div className="glass p-8 rounded-3xl shadow-xl border border-white/60">
-                        <div className="mb-6 p-4 bg-purple-50 rounded-xl border border-purple-100 flex items-center justify-between">
-                            <div>
-                                <div className="text-xs font-bold text-purple-500 uppercase">Status Saat Ini</div>
-                                <div className="font-bold text-lg text-purple-900">{studentData.Status || 'Belum Ada Status'}</div>
-                            </div>
-                            <div className="text-right">
-                                <div className="text-xs font-bold text-purple-500 uppercase">Terakhir Diupdate</div>
-                                <div className="text-sm font-medium text-gray-600">
-                                    {studentData.LastUpdateProgres   
-                                        ? formatDateId(studentData.LastUpdateProgres, true)   
-                                        : '-'}
-                                </div>
-                            </div>
-                        </div>
-
                         <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Judul Tugas Akhir</label>
-                                <textarea   
-                                    className="textarea-modern min-h-[100px] font-semibold text-purple-900"   
-                                    value={formData.judul}   
-                                    onChange={e => setFormData({...formData, judul: e.target.value})}   
-                                    placeholder="Masukkan Judul Tugas Akhir Anda..."   
-                                    required   
-                                />
-                                <p className="text-[10px] text-gray-500 mt-1">Pastikan judul sesuai dengan persetujuan pembimbing.</p>
-                            </div>
-
-                            {/* --- NEW PROGRES BAB SELECTOR --- */}
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Judul Tugas Akhir</label><textarea className="textarea-modern min-h-[100px] font-semibold text-purple-900" value={formData.judul} onChange={e => setFormData({...formData, judul: e.target.value})} required /></div>
                             <div>
                                 <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Posisi Progres Penulisan</label>
-                                <div className="relative">
-                                    <select 
-                                        className="input-modern cursor-pointer font-bold text-purple-700" 
-                                        value={formData.bab} 
-                                        onChange={e => setFormData({...formData, bab: e.target.value})}
-                                    >
-                                        {babOptions.map(opt => (
-                                            <option key={opt} value={opt}>{opt}</option>
-                                        ))}
-                                    </select>
-                                    <Icon path={PATHS.ChevronDown} className="absolute right-3 top-3 text-purple-400 pointer-events-none" size={16}/>
-                                </div>
-                                <p className="text-[10px] text-gray-500 mt-1">Pilih Bab atau tahapan penulisan yang sedang Anda kerjakan saat ini.</p>
+                                <div className="relative"><select className="input-modern cursor-pointer font-bold text-purple-700" value={formData.bab} onChange={e => setFormData({...formData, bab: e.target.value})}>{babOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}</select><Icon path={PATHS.ChevronDown} className="absolute right-3 top-3 text-purple-400 pointer-events-none" size={16}/></div>
                             </div>
-
-                            <div>
-                                <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Jumlah Bimbingan (Kali)</label>
-                                <div className="relative">
-                                    <input   
-                                        type="number"   
-                                        min="0"
-                                        className="input-modern pl-12"   
-                                        value={formData.bimbingan}   
-                                        onChange={e => setFormData({...formData, bimbingan: e.target.value})}   
-                                        required   
-                                    />
-                                    <div className="absolute left-4 top-3 text-purple-400 font-bold">#</div>
-                                </div>
-                                <p className="text-[10px] text-gray-500 mt-1">Total pertemuan bimbingan yang sudah dilakukan dengan pembimbing.</p>
-                            </div>
-
-                            <div>
-                                <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Detail Progres Pengerjaan</label>
-                                <textarea   
-                                    className="textarea-modern min-h-[200px]"   
-                                    value={formData.deskripsi}   
-                                    onChange={e => setFormData({...formData, deskripsi: e.target.value})}   
-                                    placeholder="Ceritakan sejauh mana pengerjaan tugas akhir Anda. Contoh: Sudah menyelesaikan Bab 3, sedang menyusun kuesioner..."   
-                                    required   
-                                />
-                            </div>
-
-                            <div className="pt-4 border-t border-purple-100">
-                                <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-bold shadow-lg hover:shadow-purple-500/40 transition transform active:scale-95 flex items-center justify-center gap-2">
-                                    <Icon path={PATHS.FileText} size={20}/> Simpan Perubahan
-                                </button>
-                            </div>
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Jumlah Bimbingan (Kali)</label><input type="number" min="0" className="input-modern" value={formData.bimbingan} onChange={e => setFormData({...formData, bimbingan: e.target.value})} required /></div>
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Detail Progres</label><textarea className="textarea-modern min-h-[100px]" value={formData.deskripsi} onChange={e => setFormData({...formData, deskripsi: e.target.value})} placeholder="Ceritakan progres..." required /></div>
+                            <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-purple-500/40">Simpan Perubahan</button>
                         </form>
-                    </div>
-                </div>
-            );
-        };
-        
-        const AdministrasiMenu = ({ setPage, config, userRole }) => {
-            const menuItems = [
-                { id: 'pengajuan_judul', label: 'Pengajuan Judul', icon: PATHS.FileText, color: 'bg-blue-100 text-blue-600', desc: 'Ajukan judul tugas akhir baru' },
-                { id: 'sempro', label: 'Seminar Proposal', icon: PATHS.Book, color: 'bg-purple-100 text-purple-600', desc: 'Daftar ujian proposal' },
-                { id: 'semhas', label: 'Seminar Hasil', icon: PATHS.Chart, color: 'bg-pink-100 text-pink-600', desc: 'Daftar ujian hasil' },
-                { id: 'daftar_sidang', label: 'Sidang Akhir', icon: PATHS.Graduation, color: 'bg-emerald-100 text-emerald-600', desc: 'Daftar sidang tugas akhir' },
-                { id: 'laporan_ta', label: 'Laporan Tugas Akhir', icon: PATHS.FileText, color: 'bg-cyan-100 text-cyan-600', desc: 'Upload laporan progres TA' },  
-                { id: 'surat', label: 'Layanan Surat', icon: PATHS.Mail, color: 'bg-orange-100 text-orange-600', desc: 'Buat surat ijin riset dll' },
-                { id: 'yudisium', label: 'Pendaftaran Yudisium', icon: PATHS.Tag, color: 'bg-yellow-100 text-yellow-600', desc: 'Daftar yudisium kelulusan' },
-                { id: 'peminatan', label: 'Data Peminatan', icon: PATHS.Cog, color: 'bg-slate-100 text-slate-600', desc: 'Kelola data peminatan' },
-            ];
-
-            const visibleItems = menuItems.filter(item => {
-                if (userRole === 'mahasiswa' && item.id === 'peminatan') return false;
-                return true;
-            });
-
-            const getGformUrl = (id) => {
-                if (id === 'daftar_sidang') return config.gform_sidang;
-                return config[`gform_${id}`];
-            };
-
-            return (
-                <div className="space-y-8 animate-fade-in pb-20">
-                    <div>
-                        <h2 className="text-3xl font-bold text-purple-900 mb-2">Administrasi Akademik</h2>
-                        <p className="text-purple-600">Pilih menu layanan administrasi yang tersedia di bawah ini.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {visibleItems.map((item, idx) => {
-                            const gformUrl = getGformUrl(item.id);
-                            return (
-                                <div key={item.id} className="relative group h-full" style={{animationDelay: `${idx * 100}ms`}}>
-                                    <div className="glass p-6 rounded-3xl border border-white/60 shadow-lg hover:shadow-purple-500/20 transition duration-300 flex flex-col h-full relative overflow-hidden">
-                                         
-                                        <button 
-                                            onClick={() => setPage(item.id)}
-                                            className="flex items-center gap-6 text-left flex-1 outline-none"
-                                        >
-                                            <div className={`absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4 scale-150 group-hover:scale-175 transition duration-500 pointer-events-none`}>
-                                                <Icon path={item.icon} size={100} />
-                                            </div>
-
-                                            <div className={`w-16 h-16 rounded-2xl ${item.color} flex-shrink-0 flex items-center justify-center shadow-inner group-hover:scale-110 transition duration-300`}>
-                                                <Icon path={item.icon} size={32}/>
-                                            </div>
-                                            <div className="relative z-10">
-                                                <span className="font-bold text-lg text-purple-900 group-hover:text-purple-700 transition block">{item.label}</span>
-                                                <span className="text-xs text-gray-500 group-hover:text-gray-600">{item.desc}</span>
-                                            </div>
-                                        </button>
-
-                                        {gformUrl && (
-                                            <div className="relative z-20 mt-4 pt-4 border-t border-purple-100">
-                                                <a   
-                                                    href={gformUrl}   
-                                                    target="_blank"   
-                                                    className="block w-full py-2.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xs font-bold rounded-xl text-center shadow-md hover:shadow-lg hover:shadow-purple-500/30 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                                                >
-                                                    <Icon path={PATHS.ExternalLink} size={14}/> Daftar via GForm
-                                                </a>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
                     </div>
                 </div>
             );
@@ -1434,6 +1645,7 @@
             const [greeting, setGreeting] = useState('');
             
             const globalMhs = db['Mahasiswa Tugas Akhir'] || [];
+            const globalLulusan = db['Mahasiswa Lulusan'] || [];
             const rawDosen = db['Data Dosen'] || [];  
             const globalJadwal = db['Jadwal Ujian TA'] || [];
             
@@ -1443,11 +1655,25 @@
                     return globalMhs.filter(m => {
                         const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
                         const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                        return p1 === myName || p2 === myName;
+                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
+                        return p1 === myName || p2 === myName || penguji === myName;
                     });
                 }
                 return globalMhs;  
             }, [globalMhs, userRole, currentUser]);
+
+            const dashboardLulusan = useMemo(() => {
+                if (userRole === 'dosen' && currentUser?.Nama) {
+                    const myName = String(currentUser.Nama).trim().toLowerCase();
+                    return globalLulusan.filter(m => {
+                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
+                        return p1 === myName || p2 === myName || penguji === myName;
+                    });
+                }
+                return globalLulusan;
+            }, [globalLulusan, userRole, currentUser]);
 
             const allDosen = useMemo(() => {
                 const counts = {};
@@ -1491,6 +1717,7 @@
 
             const stats = {
                 totalMhs: dashboardMhs.length,
+                totalLulusan: dashboardLulusan.length, // Alumni stats
                 belumProposal: dashboardMhs.filter(m => m.Status === 'Belum Proposal').length,
                 sempro: dashboardMhs.filter(m => m.Status === 'Sudah Proposal').length,
                 semhas: dashboardMhs.filter(m => m.Status === 'Sudah Hasil').length,
@@ -1519,18 +1746,18 @@
                             return (
                                 <div key={d.id} className="relative group cursor-default">
                                     <div className="flex justify-between text-sm mb-1.5 font-medium items-end">
-                                        <div className="flex flex-col">
-                                            <span className="text-purple-900 font-bold">{d.Nama}</span>
-                                            <span className="text-[10px] text-purple-400">{d.Keahlian}</span>
-                                        </div>
-                                        <span className={`font-bold px-2 py-0.5 rounded-md text-xs ${isFull ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                                            {d.Terisi}/{d.Kuota}
-                                        </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-purple-900 font-bold">{d.Nama}</span>
+                                                <span className="text-[10px] text-purple-400">{d.Keahlian}</span>
+                                            </div>
+                                            <span className={`font-bold px-2 py-0.5 rounded-md text-xs ${isFull ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                                                {d.Terisi}/{d.Kuota}
+                                            </span>
                                     </div>
                                     <div className="w-full bg-white/50 rounded-full h-2.5 overflow-hidden shadow-inner">
-                                        <div className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm relative overflow-hidden ${isFull ? 'bg-gradient-to-r from-red-400 to-red-600' : 'bg-gradient-to-r from-violet-400 to-fuchsia-500'}`} style={{ width: `${percent}%`, transitionDelay: `${idx * 100}ms` }}>
-                                            <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse-slow"></div>
-                                        </div>
+                                            <div className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm relative overflow-hidden ${isFull ? 'bg-gradient-to-r from-red-400 to-red-600' : 'bg-gradient-to-r from-violet-400 to-fuchsia-500'}`} style={{ width: `${percent}%`, transitionDelay: `${idx * 100}ms` }}>
+                                                <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse-slow"></div>
+                                            </div>
                                     </div>
                                 </div>
                             )
@@ -1551,8 +1778,10 @@
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                         <StatCard title="Total Mahasiswa" value={stats.totalMhs} colorClass="text-purple-700" iconClass="text-purple-500" delay="0ms"/>
+                        {/* New Alumni Card */}
+                        <StatCard title="Total Alumni" value={stats.totalLulusan} colorClass="text-blue-600" iconClass="text-blue-500" delay="50ms"/>
                         <StatCard title="Data Dosen" value={stats.totalDosen} colorClass="text-indigo-600" iconClass="text-indigo-500" delay="100ms"/>
                         <StatCard title="Belum Proposal" value={stats.belumProposal} colorClass="text-emerald-500" iconClass="text-emerald-500" delay="200ms"/>
                         <StatCard title="Sudah Proposal" value={stats.sempro} colorClass="text-orange-500" iconClass="text-orange-500" delay="300ms"/>
@@ -1563,7 +1792,7 @@
                     <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                         <div className="md:col-span-2 glass p-6 md:p-8 rounded-3xl shadow-xl border border-white/60">
                             <h3 className="font-bold text-lg text-purple-900 mb-6 flex items-center gap-3">
-                                <span className="p-2 bg-purple-100 text-purple-600 rounded-lg"><Icon path={PATHS.Chart}/></span>   
+                                <span className="p-2 bg-purple-100 text-purple-600 rounded-lg"><Icon path={PATHS.Chart}/></span>    
                                 Beban Bimbingan Dosen (Global)
                             </h3>
                             <WorkloadChart dosenData={allDosen} />
@@ -1578,18 +1807,18 @@
                             <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar relative z-10">
                                 {dashboardJadwal.slice(0, 5).map((j, i) => (
                                     <div key={i} className="bg-white/5 backdrop-blur-sm p-3 rounded-xl border border-white/10 hover:bg-white/10 transition group">
-                                        <div className="flex justify-between items-start mb-1">
-                                            <div className="font-bold text-sm text-yellow-300 group-hover:text-yellow-200 transition">{j.Mahasiswa}</div>
-                                            <span className="text-[10px] bg-purple-600 px-2 py-0.5 rounded text-white">{j.Jenis.split(' ')[1] || j.Jenis}</span>
-                                        </div>
-                                        <div className="text-xs text-slate-300 flex flex-wrap gap-x-3 gap-y-1 mt-2">
-                                             <span className="flex items-center gap-1 text-pink-300 font-medium">
-                                                <Icon path={PATHS.FileText} size={12}/>   
-                                                {formatDateId(j.Tanggal)}
-                                             </span>
-                                             <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {j.Jam}</span>
-                                             <span className="flex items-center gap-1"><Icon path={PATHS.Home} size={12}/> {j.Ruang}</span>
-                                        </div>
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="font-bold text-sm text-yellow-300 group-hover:text-yellow-200 transition">{j.Mahasiswa}</div>
+                                                <span className="text-[10px] bg-purple-600 px-2 py-0.5 rounded text-white">{j.Jenis.split(' ')[1] || j.Jenis}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-300 flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                                                 <span className="flex items-center gap-1 text-pink-300 font-medium">
+                                                    <Icon path={PATHS.FileText} size={12}/>    
+                                                    {formatDateId(j.Tanggal)}
+                                                 </span>
+                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {j.Jam}</span>
+                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Home} size={12}/> {j.Ruang}</span>
+                                            </div>
                                     </div>
                                 ))}
                                 {dashboardJadwal.length === 0 && <p className="text-sm text-slate-400 text-center py-10">Belum ada jadwal {userRole === 'dosen' ? 'untuk mahasiswa Anda' : ''}.</p>}
@@ -1597,226 +1826,6 @@
                         </div>
                     </div>
                 </div>
-            );
-        };
-
-        // --- CHATBOT COMPONENT ---
-        const ChatBot = ({ db, currentUser, userRole, isOpen, onToggle }) => {
-            const [input, setInput] = useState('');
-            const [messages, setMessages] = useState([
-                { id: 1, text: "Halo! Ada yang bisa saya bantu?", sender: 'bot' }
-            ]);
-            const [isTyping, setIsTyping] = useState(false);
-            const chatEndRef = useRef(null);
-
-            useEffect(() => {
-                if (chatEndRef.current) {
-                    chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
-                }
-            }, [messages, isOpen]);
-
-            const quickActions = useMemo(() => {
-                if (userRole === 'mahasiswa') {
-                    return [
-                        { label: "Cek Jadwal Saya", query: "jadwal saya", icon: PATHS.Sun },
-                        { label: "Siapa Pembimbing?", query: "pembimbing saya", icon: PATHS.User },
-                        { label: "Judul Tugas Akhir", query: "judul tugas akhir", icon: PATHS.FileText },
-                        { label: "Bantuan", query: "bantuan", icon: PATHS.Info },
-                    ];
-                } else if (userRole === 'dosen') {
-                    return [
-                        { label: "Data Bimbingan", query: "data bimbingan saya", icon: PATHS.Users },
-                        { label: "Cek Jadwal", query: "jadwal ujian", icon: PATHS.Sun },
-                        { label: "Beban Kerja", query: "beban kerja", icon: PATHS.Chart },
-                        { label: "Pusat Bantuan", query: "bantuan", icon: PATHS.Info },
-                    ];
-                }
-                return [];
-            }, [userRole]);
-
-            const generateBotResponse = (query, db, currentUser) => {
-                const q = query.toLowerCase();
-                
-                if (userRole === 'mahasiswa') {
-                    if (q.includes('jadwal saya') || q.includes('kapan ujian')) {
-                        const mySchedule = (db['Jadwal Ujian TA'] || []).filter(j => j.Mahasiswa === currentUser.Nama);
-                        if (mySchedule.length > 0) {
-                            return `Jadwal Anda:\n${mySchedule.map(j => `- ${j.Jenis}: ${formatDateId(j.Tanggal)} jam ${j.Jam} di ${j.Ruang}`).join('\n')}`;
-                        } else {
-                            return "Saya tidak menemukan jadwal ujian untuk nama Anda saat ini.";
-                        }
-                    }
-                    if (q.includes('pembimbing') || q.includes('dosen saya')) {
-                        const p1 = currentUser.Pembimbing_1;
-                        const p2 = currentUser.Pembimbing_2;
-                        if (p1 && p2) return `Pembimbing Anda adalah ${p1} (Pembimbing 1) dan ${p2} (Pembimbing 2).`;
-                        if (p1) return `Pembimbing Anda adalah ${p1}.`;
-                        return "Data pembimbing belum tersedia.";
-                    }
-                    if (q.includes('judul') || q.includes('topik')) {
-                        return `Judul TA Anda saat ini: "${currentUser.Judul || '-'}"`;
-                    }
-                }
-
-                if (userRole === 'dosen' && q.includes('data bimbingan')) {
-                    const myStudents = (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
-                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                        const myName = String(currentUser.Nama).trim().toLowerCase();
-                        return p1 === myName || p2 === myName;
-                    });
-                    
-                    if (myStudents.length > 0) {
-                        return `Daftar ${myStudents.length} mahasiswa bimbingan Anda:\n${myStudents.map(m => `- ${m.Nama} (${m.NPM}) - ${m.Status}`).join('\n')}`;
-                    } else {
-                        return "Anda belum memiliki data mahasiswa bimbingan.";
-                    }
-                }
-                
-                if (userRole === 'dosen' && q.includes('beban kerja')) {
-                     const total = (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
-                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                        const myName = String(currentUser.Nama).trim().toLowerCase();
-                        return p1 === myName || p2 === myName;
-                     }).length;
-                     return `Total beban kerja bimbingan Anda saat ini adalah ${total} mahasiswa.`;
-                }
-
-                if (q.includes('cari jadwal') || q.includes('jadwal')) {
-                    const nameKeywords = q.replace('cari jadwal', '').replace('jadwal', '').trim();
-                    if (nameKeywords.length > 3) {
-                        const results = (db['Jadwal Ujian TA'] || []).filter(j =>   
-                            j.Mahasiswa.toLowerCase().includes(nameKeywords)
-                        );
-                        if (results.length > 0) {
-                            return `Ditemukan ${results.length} jadwal:\n${results.map(j => `- ${j.Mahasiswa}: ${j.Jenis} tgl ${formatDateId(j.Tanggal)}`).join('\n')}`;
-                        }
-                        return `Maaf, saya tidak menemukan jadwal untuk "${nameKeywords}".`;
-                    }
-                    return "Untuk mencari jadwal, ketik 'Cari jadwal [Nama Mahasiswa]'.";
-                }
-
-                if (q.includes('halo') || q.includes('hai')) return "Halo! Semangat mengerjakan TA ya!";
-                if (q.includes('terima kasih') || q.includes('makasih')) return "Sama-sama! Semoga dilancarkan tugas akhirnya.";
-                if (q.includes('sempro')) return "Seminar Proposal biasanya diadakan setelah judul disetujui. Cek menu Administrasi untuk pendaftaran.";
-                if (q.includes('semhas')) return "Seminar Hasil adalah ujian presentasi hasil penelitian tengah. Pastikan laporan sudah siap!";
-                if (q.includes('login') || q.includes('masuk')) return "Silakan login menggunakan NPM (Mahasiswa) atau NIDN (Dosen/Tendik). Password default sama dengan ID.";
-                
-                return "Maaf, saya kurang paham. Coba tanyakan tentang 'jadwal', 'pembimbing', atau 'cari jadwal [nama]'.";
-            };
-
-            const handleSend = (e) => {
-                e.preventDefault();
-                if (!input.trim()) return;
-
-                const userMsg = { id: Date.now(), text: input, sender: 'user' };
-                setMessages(prev => [...prev, userMsg]);
-                setInput('');
-                setIsTyping(true);
-
-                setTimeout(() => {
-                    const botResponseText = generateBotResponse(userMsg.text, db, currentUser);
-                    const botMsg = { id: Date.now() + 1, text: botResponseText, sender: 'bot' };
-                    setMessages(prev => [...prev, botMsg]);
-                    setIsTyping(false);
-                }, 1000);
-            };
-
-            return (
-                <>
-                    {!isOpen && (
-                        <button   
-                            onClick={onToggle}
-                            className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl shadow-purple-500/40 flex items-center justify-center text-white z-50 hover:scale-110 transition transform animate-bounce-slight"
-                            title="Buka Chat"
-                        >
-                            <Icon path={PATHS.MessageCircle} size={32} />
-                        </button>
-                    )}
-
-                    {isOpen && (
-                        <div className="fixed bottom-6 right-6 md:right-6 w-[calc(100%-2rem)] md:w-96 h-[500px] bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 z-50 flex flex-col animate-slide-up overflow-hidden">
-                            
-                            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 flex items-center justify-between text-white shadow-lg">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative">
-                                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                                            <Icon path={PATHS.Robot} size={20}/>
-                                        </div>
-                                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-purple-600 animate-pulse"></div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-sm">FIKPsi Bot</h3>
-                                        <p className="text-[10px] text-white/70">Online • Otomatis</p>
-                                    </div>
-                                </div>
-                                <button onClick={onToggle} className="p-1 hover:bg-white/20 rounded-full transition">
-                                    <Icon path={PATHS.Minimize2} size={20} />
-                                </button>
-                            </div>
-
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-purple-50/30 custom-scrollbar">
-                                {messages.map((msg, index) => (
-                                    <div key={msg.id}>
-                                        <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
-                                                msg.sender === 'user'   
-                                                    ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-br-none'   
-                                                    : 'bg-white text-gray-700 border border-purple-100 rounded-bl-none'
-                                            }`}>
-                                                <span className="whitespace-pre-wrap leading-relaxed">{msg.text}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        {msg.sender === 'bot' && index === 0 && quickActions.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
-                                                {quickActions.map((action, i) => (
-                                                    <button
-                                                        key={i}
-                                                        onClick={() => handleSend({ preventDefault: () => {}, target: { value: action.query } })}
-                                                        className="px-3 py-1.5 bg-white border border-purple-200 text-purple-700 rounded-full text-xs font-bold shadow-sm hover:bg-purple-50 hover:border-purple-400 transition flex items-center gap-2"
-                                                    >
-                                                        <Icon path={action.icon} size={12} />
-                                                        {action.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                {isTyping && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-white border border-purple-100 p-3 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-1">
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                        </div>
-                                    </div>
-                                )}
-                                <div ref={chatEndRef} />
-                            </div>
-
-                            <form onSubmit={handleSend} className="p-3 bg-white border-t border-purple-100 flex items-center gap-2">
-                                <input   
-                                    type="text"   
-                                    className="flex-1 bg-purple-50 border border-purple-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                                    placeholder="Ketik pertanyaan..."
-                                    value={input}
-                                    onChange={e => setInput(e.target.value)}
-                                    autoComplete="off"
-                                />
-                                <button   
-                                    type="submit"   
-                                    disabled={!input.trim()}
-                                    className="p-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                                >
-                                    <Icon path={PATHS.Send} size={18} />
-                                </button>
-                            </form>
-                        </div>
-                    )}
-                </>
             );
         };
 
@@ -1832,402 +1841,94 @@
             const [config, setConfig] = useStickyState({  
                 app_name: 'SI Tugas Akhir FIKPsi',  
                 scriptUrl: 'https://script.google.com/macros/s/AKfycby1xNCAWskg2zGUeEL1lR09yd9ozBIcymxk_-XGNlSoOA1m1mssSTle49IyeIRtgGCcUw/exec',  
-                ai_api_key: '',          
-                ai_key_openai: '', 
-                ai_key_deepseek: '',
-                ai_key_groq: '',          
-                ai_key_cohere: '',          
-                ai_key_huggingface: '',
-                gform_pengajuan_judul: '', 
-                gform_sempro: '', 
-                gform_semhas: '', 
-                gform_sidang: '', 
-                gform_surat: '', 
-                gform_yudisium: '',
-                gform_laporan_ta: ''  
-            }, 'sim_config_ta_v10_progresbab'); 
+            }, 'sim_config_ta_v12_lulusan'); 
 
             const { db, add, del, update, isOnline, refresh, importBatch, batchUpdate, isLoading, isBackgroundSyncing, lastSyncTime, save } = useDatabase(INITIAL_DB, config.scriptUrl);
-
-            const crud = { add, del, update };
-
-            const recalculateDosenQuota = (mahasiswaList, dosenList) => {
-                let updatedDosen = [...dosenList];
-                const counts = {};
-                const extractedNames = new Set();
-
-                mahasiswaList.forEach(m => {
-                    if(m.Pembimbing_1 && m.Pembimbing_1 !== '-' && m.Pembimbing_1.trim() !== '') {
-                        const name = m.Pembimbing_1.trim();
-                        counts[name] = (counts[name] || 0) + 1;
-                        extractedNames.add(name);
-                    }
-                    if(m.Pembimbing_2 && m.Pembimbing_2 !== '-' && m.Pembimbing_2.trim() !== '') {
-                        const name = m.Pembimbing_2.trim();
-                        counts[name] = (counts[name] || 0) + 1;
-                        extractedNames.add(name);
-                    }
-                    
-                    if(m.Penguji && m.Penguji !== '-' && m.Penguji.trim() !== '') extractedNames.add(m.Penguji.trim());
-                });
-                
-                updatedDosen = updatedDosen.map(d => ({
-                    ...d,
-                    Terisi: counts[d.Nama.trim()] || 0
-                }));
-
-                extractedNames.forEach(name => {
-                    const exists = updatedDosen.some(d => d.Nama.toLowerCase().trim() === name.toLowerCase());
-                    if (!exists) {
-                        updatedDosen.push({
-                            id: Date.now() + Math.random(),
-                            Nama: name,
-                            NIDN: "-", 
-                            Keahlian: "Umum", 
-                            Kuota: 10, 
-                            Terisi: counts[name] || 0
-                        });
-                    }
-                });
-
-                return updatedDosen;
-            };
-
-            const handleStudentChange = (action, id, data) => {
-                let newMhsList = [...(db['Mahasiswa Tugas Akhir'] || [])];
-                const oldDosenList = db['Data Dosen'] || [];
-                
-                if (action === 'add') {
-                    const newItem = { id: Date.now(), ...data };
-                    newMhsList.push(newItem);
-                    save('create', 'Mahasiswa Tugas Akhir', newItem);
-                } else if (action === 'update') {
-                    newMhsList = newMhsList.map(m => m.id === id ? { ...m, ...data } : m);
-                    save('update', 'Mahasiswa Tugas Akhir', { id, ...data });
-                } else if (action === 'delete') {
-                    newMhsList = newMhsList.filter(m => m.id !== id);
-                    save('delete', 'Mahasiswa Tugas Akhir', { id });
-                }
-
-                const updatedDosen = recalculateDosenQuota(newMhsList, oldDosenList);
-
-                updatedDosen.forEach(dNew => {
-                    const dOld = oldDosenList.find(d => d.id === dNew.id);
-                    if (!dOld) {
-                        save('create', 'Data Dosen', dNew);
-                    } else if (dOld.Terisi !== dNew.Terisi) {
-                        save('update', 'Data Dosen', { id: dNew.id, Terisi: dNew.Terisi });
-                    }
-                });
-
-                batchUpdate({
-                    'Mahasiswa Tugas Akhir': newMhsList,
-                    'Data Dosen': updatedDosen
-                });
-                
-                if(action === 'add') alert('Data Mahasiswa berhasil disimpan & Kuota Dosen diperbarui!');
-                if(action === 'update') alert('Data Mahasiswa berhasil diperbarui & Kuota Dosen diperbarui!');
-            };
-
-            const handlePengajuanJudul = (data) => {
-                const newPengajuan = { id: Date.now(), ...data };
-                const existingMhs = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.NPM === data.NPM);
-                let newMhsList = [...(db['Mahasiswa Tugas Akhir'] || [])];
-
-                if (existingMhs) {
-                    const updatedData = { ...existingMhs, Judul: data.Judul, Peminatan: data.Peminatan, Status: 'Belum Proposal' };
-                    newMhsList = newMhsList.map(m => m.NPM === data.NPM ? updatedData : m);
-                    save('update', 'Mahasiswa Tugas Akhir', updatedData); 
-                } else {
-                    const newMhs = {
-                        id: Date.now() + 1,
-                        Nama: data.Nama,
-                        NPM: data.NPM,
-                        Prodi: "S1 Ilmu Kesehatan Masyarakat",
-                        Angkatan: "20" + (data.NPM ? data.NPM.substring(2,4) : "20"), 
-                        Peminatan: data.Peminatan,
-                        Judul: data.Judul,
-                        Status: "Belum Proposal",
-                        Pembimbing_1: "-",
-                        Pembimbing_2: "-"
-                    };
-                    newMhsList.push(newMhs);
-                    save('create', 'Mahasiswa Tugas Akhir', newMhs); 
-                }
-
-                save('create', 'Pengajuan Judul', newPengajuan); 
-
-                batchUpdate({
-                    'Pengajuan Judul': [...(db['Pengajuan Judul'] || []), newPengajuan],
-                    'Mahasiswa Tugas Akhir': newMhsList
-                });
-                alert("Pengajuan Judul tersimpan! Data Mahasiswa otomatis diperbarui ke 'Belum Proposal'.");
-            };
-
-            const handleRegistration = (collectionName, data, targetStatus) => {
-                const newReg = { id: Date.now(), ...data };
-                const existingMhs = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.Nama === data.Nama);
-                let newMhsList = [...(db['Mahasiswa Tugas Akhir'] || [])];
-
-                if (existingMhs) {
-                    const updatedMhs = { ...existingMhs, Status: targetStatus };
-                    newMhsList = newMhsList.map(m => m.id === existingMhs.id ? updatedMhs : m);
-                    save('update', 'Mahasiswa Tugas Akhir', updatedMhs); 
-                }
-
-                save('create', collectionName, newReg); 
-
-                batchUpdate({
-                    [collectionName]: [...(db[collectionName] || []), newReg],
-                    'Mahasiswa Tugas Akhir': newMhsList
-                });
-                alert(`Pendaftaran berhasil disimpan! Status mahasiswa diperbarui menjadi '${targetStatus}'.`);
-            };
 
             const handleRoleLogin = (role, userData = null) => {
                 setUserRole(role);
                 setCurrentUser(userData);
                 setShowLogin(false);
-                
-                if (role === 'mahasiswa') {
-                    setPage('bimbingan'); 
-                } else if (role === 'tendik') {
-                    setPage('informasi');
-                } else {
-                    setPage('dashboard'); 
-                }
-
-                const latestInfo = db['Informasi'] && db['Informasi'].length > 0 ? db['Informasi'][db['Informasi'].length - 1] : null;
-                const latestJadwal = db['Jadwal Ujian TA'] && db['Jadwal Ujian TA'].length > 0 ? db['Jadwal Ujian TA'][db['Jadwal Ujian TA'].length - 1] : null;
-                
-                const latestChat = db['BimbinganChats'] ? db['BimbinganChats'].filter(c => c.receiver === (userData ? userData.Nama : '')).pop() : null;
-
-                let notifContent = null;
-
-                if (role === 'mahasiswa' && userData) {
-                    if (latestChat) {
-                        notifContent = {
-                            type: 'Pesan Bimbingan Baru',
-                            title: `Dari: ${latestChat.sender}`,
-                            message: latestChat.message.length > 50 ? latestChat.message.substring(0,50) + '...' : latestChat.message
-                        };
-                    } else if (latestJadwal) {
-                         notifContent = {
-                            type: 'Jadwal Terbaru',
-                            title: `Ujian ${latestJadwal.Jenis}`,
-                            message: `${latestJadwal.Mahasiswa} akan ujian pada ${formatDateId(latestJadwal.Tanggal)} di ${latestJadwal.Ruang}. Semangat!`
-                        };
-                    } else if (latestInfo) {
-                        notifContent = {
-                            type: 'Info Akademik',
-                            title: latestInfo.Judul,
-                            message: latestInfo.Isi.length > 80 ? latestInfo.Isi.substring(0, 80) + '...' : latestInfo.Isi
-                        };
-                    }
-
-                } else {
-                    if (latestChat) {
-                        notifContent = {
-                            type: 'Pesan Bimbingan Baru',
-                            title: `Dari: ${latestChat.sender}`,
-                            message: latestChat.message.length > 50 ? latestChat.message.substring(0,50) + '...' : latestChat.message
-                        };
-                    } else if (latestInfo) {
-                        notifContent = {
-                            type: 'Pengumuman Baru',
-                            title: latestInfo.Judul,
-                            message: latestInfo.Isi.length > 80 ? latestInfo.Isi.substring(0, 80) + '...' : latestInfo.Isi
-                        };
-                    }
-                }
-
-                if (notifContent) {
-                    setTimeout(() => {
-                        setNotification({
-                            user: userData ? userData.Nama : (role === 'admin' ? 'Admin' : role === 'tendik' ? 'Staf Akademik' : 'Bapak/Ibu'),  
-                            ...notifContent
-                        });
-                    }, 800); 
-                }
+                setPage('dashboard'); 
             };
 
             const NavItem = ({ name, icon, label, onClick, isActive, badge }) => (
-                <button   
-                    onClick={onClick}   
-                    className={`w-full text-left px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-300 flex items-center justify-between mb-1.5 group
-                    ${isActive
-                        ? 'bg-white text-purple-700 shadow-lg shadow-purple-900/10'   
-                        : 'text-purple-100/70 hover:bg-white/10 hover:text-white'
-                    }`}
-                >
-                    <div className="flex items-center gap-3">
-                        <Icon path={icon} className={isActive ? 'text-pink-500' : 'text-purple-300 group-hover:text-white'} /> {label}
-                    </div>
+                <button onClick={onClick} className={`w-full text-left px-4 py-3.5 rounded-2xl text-sm font-semibold transition-all duration-300 flex items-center justify-between mb-1.5 group ${isActive ? 'bg-white text-purple-700 shadow-lg shadow-purple-900/10' : 'text-purple-100/70 hover:bg-white/10 hover:text-white'}`}>
+                    <div className="flex items-center gap-3"><Icon path={icon} className={isActive ? 'text-pink-500' : 'text-purple-300 group-hover:text-white'} /> {label}</div>
                     {badge && <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">{badge}</span>}
-                    {isActive && !badge && <div className="w-1.5 h-1.5 rounded-full bg-pink-500 shadow-sm"></div>}
                 </button>
             );
 
+            // --- Form Config Lulusan (Dynamic Options) ---
             const dosenOptions = (db['Data Dosen'] || []).map(d => ({ value: d.Nama, label: d.Nama }));
-            
-            const mhsOptions = (db['Mahasiswa Tugas Akhir'] || [])
-                .map(m => ({ value: m.Nama, label: `${m.Nama} - ${m.NPM}` }))
-                .sort((a, b) => a.label.localeCompare(b.label));
+            const peminatanOptions = (db['Data Peminatan'] || []).map(p => ({ value: p.Nama, label: p.Nama }));
 
-            const jadwalFormConfig = [
-                {key:'Mahasiswa', label:'Nama Mahasiswa', type: 'select', options: mhsOptions},
-                {key:'Jenis', label:'Jenis Ujian', type: 'select', options:[{value:'Seminar Proposal', label:'Sempro'}, {value:'Seminar Hasil', label:'Semhas'}, {value:'Sidang', label:'Sidang'}]},
-                {key:'Tanggal', label:'Tanggal', type:'date'},
-                {key:'Jam', label:'Jam'},
-                {key:'Ruang', label:'Ruangan'}
-            ];
-            
-            const mahasiswaFormConfig = [
-                {key:'Nama', label:'Nama Mahasiswa'}, {key:'NPM', label:'NPM'},
-                {key:'Prodi', label:'Program Studi', type: 'select', options:[
-                    {value:'S1 Ilmu Kesehatan Masyarakat', label:'S1 Ilmu Kesehatan Masyarakat'},  
-                    {value:'S1 Psikologi', label:'S1 Psikologi'},
-                    {value:'S2 Kesehatan Masyarakat', label:'S2 Kesehatan Masyarakat'}
-                ]},
-                {key:'Peminatan', label:'Peminatan', type: 'select', options: (db['Data Peminatan'] || []).map(p => ({ value: p.Nama, label: p.Nama })) },
-                {key:'StatusAkademik', label:'Status Akademik', type: 'select', options:[
-                    {value:'Aktif', label:'Aktif'},  
-                    {value:'Non-Aktif', label:'Non-Aktif'},  
-                    {value:'Cuti', label:'Cuti'},
-                    {value:'Limit DO', label:'Limit DO'}
-                ]},
-                {key:'Status', label:'Tahapan', type: 'select', options:[
-                    {value:'Belum Proposal', label:'Belum Proposal'},  
-                    {value:'Sudah Proposal', label:'Sudah Proposal'},  
-                    {value:'Sudah Hasil', label:'Sudah Hasil'},  
-                    {value:'Sudah Sidang', label:'Sudah Sidang'},
-                    {value:'Lulus', label:'Lulus'}
-                ]},
-                {key:'Pembimbing_1', label:'Pembimbing 1', type: 'select', options: dosenOptions},  
-                {key:'Pembimbing_2', label:'Pembimbing 2', type: 'select', options: dosenOptions},
-                {key:'Penguji', label:'Penguji', type: 'select', options: dosenOptions},
-                {key:'Judul', label:'Judul Tugas Akhir', type:'textarea'},
-                {key:'LinkLaporan', label:'Link Laporan GDrive (Admin)', placeholder: 'https://...'}  
+            const lulusanFormConfig = [
+                {key:'Nama', label:'Nama Alumni'},
+                {key:'NPM', label:'NPM'},
+                {key:'Judul', label:'Judul Skripsi', type:'textarea'},
+                {key:'Pembimbing_1', label:'Pembimbing 1', type:'select', options: dosenOptions},
+                {key:'Pembimbing_2', label:'Pembimbing 2', type:'select', options: dosenOptions},
+                {key:'Penguji', label:'Penguji', type:'select', options: dosenOptions},
+                {key:'Peminatan', label:'Peminatan', type:'select', options: peminatanOptions},
+                {key:'TanggalSidang', label:'Tanggal Sidang/TA', type:'date'},
+                {key:'TahunWisuda', label:'Tahun Wisuda', type:'number'},
+                {key:'Link_ACC', label:'Link Lembar ACC (G Drive)', placeholder: 'https://...'},
+                {key:'Link_Naskah', label:'Link Dokumen TA (G Drive)', placeholder: 'https://...'},
+                {key:'Link_Jurnal', label:'Link Jurnal (G Drive)', placeholder: 'https://...'}
             ];
 
-            const PAGE_MAP = {
-                'pengajuan_judul': { title: 'Pengajuan Judul Tugas Akhir', collection: 'Pengajuan Judul', configKey: 'Pengajuan Judul', status: 'Belum Proposal' },
-                'sempro': { title: 'Seminar Proposal', collection: 'Pendaftaran Sempro', configKey: 'Pendaftaran Sempro', status: 'Sudah Proposal' },
-                'semhas': { title: 'Seminar Hasil', collection: 'Pendaftaran Semhas', configKey: 'Pendaftaran Semhas', status: 'Sudah Hasil' },
-                'daftar_sidang': { title: 'Sidang Akhir', collection: 'Pendaftaran Sidang', configKey: 'Pendaftaran Sidang', status: 'Sudah Sidang' },
-                'surat': { title: 'Layanan Surat', collection: 'Layanan Surat', configKey: 'Layanan Surat', status: null },  
-                'yudisium': { title: 'Pendaftaran Yudisium', collection: 'Data Yudisium', configKey: 'Data Yudisium', status: null },
-                'peminatan': { title: 'Data Peminatan', collection: 'Data Peminatan', configKey: 'Data Peminatan', status: null },
-                'laporan_ta': { title: 'Laporan Tugas Akhir', collection: 'Laporan TA', configKey: 'Laporan TA', status: null }  
-            };
-            
-            const jadwalData = useMemo(() => {
-                return (db['Jadwal Ujian TA'] || []).map(j => {
-                    const mhs = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.Nama === j.Mahasiswa);
-                    if (mhs) {
-                        return {  
-                            ...j,  
-                            "Judul Tugas Akhir": mhs.Judul,  
-                            "Pembimbing 1": mhs.Pembimbing_1,
-                            "Pembimbing 2": mhs.Pembimbing_2,  
-                            "Penguji Mahasiswa": mhs.Penguji          
-                        };
-                    }
-                    return j;
-                });
-            }, [db]);
-
-            const getGformUrl = (pageId) => {
-                if (pageId === 'daftar_sidang') return config.gform_sidang;
-                return config[`gform_${pageId}`];
-            }
-
-            if (!userRole) {
-                return (
-                    <div className="flex items-center justify-center min-h-screen relative overflow-hidden">
-                        <LoginCard isModal={false} db={db} handleRoleLogin={handleRoleLogin} setShowLogin={setShowLogin} onRefresh={refresh} isLoading={isLoading}/>
-                    </div>
-                )
-            }
+            if (!userRole) return <div className="flex items-center justify-center min-h-screen relative overflow-hidden"><LoginCard isModal={false} db={db} handleRoleLogin={handleRoleLogin} setShowLogin={setShowLogin} onRefresh={refresh} isLoading={isLoading}/></div>;
 
             const Sidebar = () => (
                 <>
                     <div className={`fixed inset-0 bg-purple-900/40 backdrop-blur-sm z-30 md:hidden transition-opacity duration-300 ${menuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={()=>setMenuOpen(false)}/>
                     <div className={`w-72 bg-[#2d0f59]/90 backdrop-filter backdrop-blur-xl h-screen fixed top-0 left-0 border-r border-white/10 flex flex-col z-40 transform transition-transform duration-300 ease-out md:translate-x-0 ${menuOpen ? 'translate-x-0' : '-translate-x-full'} shadow-2xl`}>
                         <div className="p-8 pb-6">
-                            <div className="w-10 h-10 bg-gradient-to-tr from-pink-500 to-purple-600 rounded-xl mb-4 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
-                                <Icon path={PATHS.Graduation} size={24}/>
-                            </div>
                             <div className="font-extrabold text-2xl text-white tracking-tight leading-none">SI TA <span className="text-purple-400">FIKPsi</span></div>
-                            <div className="text-[10px] font-bold text-purple-400/60 uppercase tracking-widest mt-1">Integrated System</div>
                         </div>
                         <nav className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar space-y-1">
+                            <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>
+                            {(userRole === 'admin') && <NavItem name="dosen" icon={PATHS.User} label="Data Dosen" onClick={()=>{setPage('dosen'); setMenuOpen(false)}} isActive={page==='dosen'}/>}
+                            {(userRole === 'admin') && <NavItem name="mahasiswa" icon={PATHS.Users} label="Data Mahasiswa" onClick={()=>{setPage('mahasiswa'); setMenuOpen(false)}} isActive={page==='mahasiswa'}/>}
+                            {userRole === 'mahasiswa' && <NavItem name="progres" icon={PATHS.Chart} label="Lapor Progres" onClick={()=>{setPage('progres'); setMenuOpen(false)}} isActive={page==='progres'}/>}
+                            
+                            {/* MENU ADMIN BOT */}
+                            {userRole === 'admin' && (
+                                <NavItem name="knowledge_base" icon={PATHS.Robot} label="Admin Bot" onClick={()=>{setPage('knowledge_base'); setMenuOpen(false)}} isActive={page==='knowledge_base'}/>
+                            )}
+                            
+                            {/* NEW: MENU DATA LULUSAN (Admin & Dosen) */}
                             {(userRole === 'admin' || userRole === 'dosen') && (
-                                <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>
+                                <NavItem name="lulusan" icon={PATHS.Graduation} label="Data Alumni & Lulusan" onClick={()=>{setPage('lulusan'); setMenuOpen(false)}} isActive={page==='lulusan'}/>
                             )}
-                            {(userRole === 'admin' || userRole === 'dosen') && (
-                                <NavItem name="mahasiswa" icon={PATHS.Users} label="Data Mahasiswa" onClick={()=>{setPage('mahasiswa'); setMenuOpen(false)}} isActive={page==='mahasiswa'}/>
-                            )}
-                            {userRole === 'dosen' && (
-                                <NavItem name="tugas_akhir" icon={PATHS.FileText} label="Tugas Akhir Mahasiswa" onClick={()=>{setPage('tugas_akhir'); setMenuOpen(false)}} isActive={page==='tugas_akhir'}/>
-                            )}
+
                             {(userRole === 'mahasiswa' || userRole === 'dosen') && (
-                                <NavItem   
-                                    name="bimbingan"   
-                                    icon={PATHS.MessageSquare}   
-                                    label="Bimbingan Tugas Akhir"   
-                                    onClick={()=>{setPage('bimbingan'); setMenuOpen(false)}}   
+                                <NavItem    
+                                    name="bimbingan"    
+                                    icon={PATHS.MessageSquare}    
+                                    label="Bimbingan Tugas Akhir"    
+                                    onClick={()=>{setPage('bimbingan'); setMenuOpen(false)}}    
                                     isActive={page==='bimbingan'}
                                     badge={(db['BimbinganChats'] || []).filter(c => c.receiver === currentUser?.Nama).length > 0 ? (db['BimbinganChats'] || []).filter(c => c.receiver === currentUser?.Nama).length : null}
                                 />
                             )}
-                            {userRole === 'admin' && (
-                                <>
-                                    <NavItem name="dosen" icon={PATHS.User} label="Data Dosen" onClick={()=>{setPage('dosen'); setMenuOpen(false)}} isActive={page==='dosen'}/>
-                                    <NavItem name="peminatan" icon={PATHS.Cog} label="Data Peminatan" onClick={()=>{setPage('peminatan'); setMenuOpen(false)}} isActive={page==='peminatan'}/>
-                                </>
+                            {userRole === 'dosen' && (
+                                <NavItem name="tugas_akhir" icon={PATHS.FileText} label="Tugas Akhir Mahasiswa" onClick={()=>{setPage('tugas_akhir'); setMenuOpen(false)}} isActive={page==='tugas_akhir'}/>
                             )}
                             <NavItem name="informasi" icon={PATHS.Bell} label="Informasi" onClick={()=>{setPage('informasi'); setMenuOpen(false)}} isActive={page==='informasi'}/>
                             {(userRole === 'admin' || userRole === 'mahasiswa' || userRole === 'tendik' || userRole === 'dosen') && (
                                 <NavItem name="sidang" icon={PATHS.Sun} label="Jadwal Ujian" onClick={()=>{setPage('sidang'); setMenuOpen(false)}} isActive={page==='sidang'}/>
                             )}
                             {(userRole === 'admin' || userRole === 'mahasiswa') && (
-                                <NavItem name="administrasi" icon={PATHS.Clip} label="Administrasi" onClick={()=>{setPage('administrasi'); setMenuOpen(false)}} isActive={page === 'administrasi' || Object.keys(PAGE_MAP).includes(page)}/>
+                                <NavItem name="administrasi" icon={PATHS.Clip} label="Administrasi" onClick={()=>{setPage('administrasi'); setMenuOpen(false)}} isActive={page === 'administrasi' || ['pengajuan_judul','sempro','semhas','daftar_sidang','laporan_ta','surat','yudisium','peminatan'].includes(page)}/>
                             )}
                             {(userRole === 'admin' || userRole === 'dosen' || userRole === 'mahasiswa') && (
                                 <NavItem name="unduh" icon={PATHS.Cloud} label="Pusat Unduhan" onClick={()=>{setPage('unduh'); setMenuOpen(false)}} isActive={page==='unduh'}/>
                             )}
-                            {userRole === 'mahasiswa' && (
-                                <NavItem name="progres" icon={PATHS.Chart} label="Lapor Progres" onClick={()=>{setPage('progres'); setMenuOpen(false)}} isActive={page==='progres'}/>
-                            )}
                         </nav>
-                        
-                        <div className="px-6 py-2">
-                             <div className="flex items-center justify-between text-[10px] text-purple-300 bg-white/5 rounded-lg p-2 border border-white/5">
-                                 <div className="flex items-center gap-2">
-                                     <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-                                     {isBackgroundSyncing ? 'Menyimpan...' : (isOnline ? 'Live Sync' : 'Offline')}
-                                 </div>
-                                 <div className="opacity-60">{lastSyncTime ? lastSyncTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--:--'}</div>
-                             </div>
-                        </div>
-
                         <div className="p-6 bg-black/20 mx-4 mb-4 rounded-2xl border border-white/5">
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold">
-                                    {userRole.charAt(0).toUpperCase()}
-                                </div>
-                                <div>
-                                    <div className="text-white text-sm font-bold capitalize">{currentUser ? currentUser.Nama : userRole}</div>
-                                    <div className="text-purple-400 text-[10px]">{userRole}</div>
-                                </div>
-                            </div>
-                            <button onClick={()=>{setShowLogin(true); setMenuOpen(false)}} className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold text-white transition flex items-center justify-center gap-2">
-                                <Icon path={PATHS.Logout} size={14}/> Keluar / Ganti
-                            </button>
-                            {userRole === 'admin' && (
-                                <button onClick={()=>{setPage('settings'); setMenuOpen(false)}} className="mt-2 w-full text-center text-[10px] text-purple-400 hover:text-white transition flex justify-center gap-1 items-center"><Icon path={PATHS.Cog} size={10}/> Pengaturan</button>
-                            )}
+                            <button onClick={()=>{setShowLogin(true); setMenuOpen(false)}} className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold text-white transition flex items-center justify-center gap-2"><Icon path={PATHS.Logout} size={14}/> Keluar</button>
                         </div>
                     </div>
                 </>
@@ -2243,47 +1944,66 @@
 
                     <main className="flex-1 md:ml-72 p-4 md:p-8 pt-24 md:pt-10 h-screen overflow-y-auto touch-scroll">
                         {page === 'dashboard' && <Dashboard db={db} userRole={userRole} currentUser={currentUser}/>}
+                        {page === 'mahasiswa' && <GenericTable key="tbl-mhs" title="Data Mahasiswa & TA" data={db['Mahasiswa Tugas Akhir']} columns={TABLE_CONFIG['Mahasiswa Tugas Akhir'].columns} formConfig={TABLE_CONFIG['Mahasiswa Tugas Akhir'].form} onAdd={(d) => add('Mahasiswa Tugas Akhir', d)} onDel={(id) => del('Mahasiswa Tugas Akhir', id)} onUpdate={(id, d) => update('Mahasiswa Tugas Akhir', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
+                        {page === 'dosen' && <GenericTable key="tbl-dosen" title="Data Dosen" data={db['Data Dosen']} columns={TABLE_CONFIG['Data Dosen'].columns} formConfig={TABLE_CONFIG['Data Dosen'].form} onAdd={d=>add('Data Dosen',d)} onDel={id=>del('Data Dosen',id)} onUpdate={(id, d)=>update('Data Dosen', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
+                        {page === 'progres' && userRole === 'mahasiswa' && <StudentProgress db={db} currentUser={currentUser} onUpdate={(col, id, data) => update(col, id, data)} />}
                         
-                        {page === 'mahasiswa' && <GenericTable   
-                            key="tbl-mhs"   
-                            title="Data Mahasiswa & TA"   
-                            data={(() => {
-                                let rawData = db['Mahasiswa Tugas Akhir'] || [];
-                                if (userRole === 'dosen' && currentUser?.Nama) {
-                                    const myName = String(currentUser.Nama).trim().toLowerCase();
-                                    rawData = rawData.filter(m => {
-                                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                                        const penguji = String(m.Penguji || '').trim().toLowerCase();
-                                        return p1 === myName || p2 === myName || penguji === myName;
-                                    });
-                                }
-                                const uniqueData = new Map();
-                                rawData.forEach(item => {
-                                    if (item.NPM) uniqueData.set(String(item.NPM).trim(), item);
-                                    else uniqueData.set(item.id, item);  
-                                });
-                                return Array.from(uniqueData.values());
-                            })()}
-                            columns={TABLE_CONFIG['Mahasiswa Tugas Akhir'].columns}   
-                            formConfig={mahasiswaFormConfig}   
-                            onAdd={(d) => handleStudentChange('add', null, d)}   
-                            onDel={(id) => handleStudentChange('delete', id)}   
-                            onUpdate={(id, d) => handleStudentChange('update', id, d)}
-                            onImport={data => importBatch('Mahasiswa Tugas Akhir', data)}
-                            allowAdd={userRole==='admin'}   
-                            allowDelete={userRole==='admin'}
-                            allowEdit={userRole==='admin'}
-                            allowImport={userRole==='admin'}
-                            statusFilterConfig={{
-                                key: 'Status',
-                                options: ['Belum Proposal', 'Sudah Proposal', 'Sudah Hasil', 'Sudah Sidang', 'Lulus']
-                            }}
-                        />}
-                        
-                        {page === 'tugas_akhir' && userRole === 'dosen' && <GenericTable   
+                        {/* HALAMAN ADMIN BOT KNOWLEDGE BASE */}
+                        {page === 'knowledge_base' && userRole === 'admin' && (
+                            <GenericTable 
+                                key="tbl-kb"
+                                title="Basis Pengetahuan Chatbot"
+                                data={db['ChatbotKnowledgeBase'] || []}
+                                columns={TABLE_CONFIG['ChatbotKnowledgeBase'].columns}
+                                formConfig={TABLE_CONFIG['ChatbotKnowledgeBase'].form}
+                                onAdd={d => { add('ChatbotKnowledgeBase', d); alert('Pengetahuan baru ditambahkan!'); }}
+                                onDel={id => del('ChatbotKnowledgeBase', id)}
+                                onUpdate={(id, d) => update('ChatbotKnowledgeBase', id, d)}
+                                allowAdd={true}
+                                allowDelete={true}
+                                allowEdit={true}
+                            />
+                        )}
+
+                        {/* NEW: HALAMAN MAHASISWA LULUSAN */}
+                        {page === 'lulusan' && (userRole === 'admin' || userRole === 'dosen') && (
+                            <GenericTable
+                                key="tbl-lulusan"
+                                title="Data Alumni & Lulusan"
+                                data={(() => {
+                                    let data = db['Mahasiswa Lulusan'] || [];
+                                    if (userRole === 'dosen' && currentUser?.Nama) {
+                                        const myName = String(currentUser.Nama).trim().toLowerCase();
+                                        data = data.filter(m => {
+                                            const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                                            const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                                            const penguji = String(m.Penguji || '').trim().toLowerCase();
+                                            return p1 === myName || p2 === myName || penguji === myName;
+                                        });
+                                    }
+                                    return data;
+                                })()}
+                                columns={TABLE_CONFIG['Mahasiswa Lulusan'].columns}
+                                formConfig={lulusanFormConfig}
+                                onAdd={d => add('Mahasiswa Lulusan', d)}
+                                onDel={id => del('Mahasiswa Lulusan', id)}
+                                onUpdate={(id, d) => update('Mahasiswa Lulusan', id, d)}
+                                allowAdd={userRole === 'admin'}
+                                allowDelete={userRole === 'admin'}
+                                allowEdit={userRole === 'admin'}
+                                allowImport={userRole === 'admin'}
+                                onImport={data=>importBatch('Mahasiswa Lulusan', data)}
+                            />
+                        )}
+
+                        {/* --- GUIDANCE PAGE --- */}
+                        {page === 'bimbingan' && (userRole === 'mahasiswa' || userRole === 'dosen') && (
+                            <BimbinganPage currentUser={currentUser} userRole={userRole} db={db} add={add} update={update} />
+                        )}
+
+                        {page === 'tugas_akhir' && userRole === 'dosen' && <GenericTable    
                             key="tbl-ta-dosen"
-                            title="Tugas Akhir Mahasiswa (Detail)"   
+                            title="Tugas Akhir Mahasiswa (Detail)"    
                             data={(() => {
                                 let rawData = db['Mahasiswa Tugas Akhir'] || [];
                                 const myName = String(currentUser.Nama).trim().toLowerCase();
@@ -2299,114 +2019,129 @@
                                     else uniqueData.set(item.id, item);
                                 });
                                 return Array.from(uniqueData.values());
-                            })()}
-                            columns={TABLE_CONFIG['Tugas Akhir Mahasiswa (Dosen)'].columns}   
-                            formConfig={[]}   
-                            allowAdd={false}   
+                            })()}    
+                            columns={TABLE_CONFIG['Tugas Akhir Mahasiswa (Dosen)'].columns}    
+                            formConfig={[]}    
+                            allowAdd={false}    
                             allowDelete={false}
-                            allowEdit={false}   
+                            allowEdit={false}    
                             allowImport={false}
                         />}
 
-                        {page === 'dosen' && <GenericTable   
-                            key="tbl-dosen"
-                            title="Data Dosen"   
-                            data={db['Data Dosen']}   
-                            columns={TABLE_CONFIG['Data Dosen'].columns}   
-                            formConfig={TABLE_CONFIG['Data Dosen'].form}   
-                            onAdd={d=>add('Data Dosen',d)}   
-                            onDel={id=>del('Data Dosen',id)}   
-                            onUpdate={(id, d)=>update('Data Dosen', id, d)}
-                            onImport={data=>importBatch('Data Dosen', data)}   
-                            allowAdd={userRole==='admin'}   
-                            allowDelete={userRole==='admin'}   
-                            allowEdit={userRole==='admin'}   
-                            allowImport={userRole==='admin'}
-                        />}
-
-                        {page === 'peminatan' && <GenericTable   
-                            key="tbl-peminatan"
-                            title="Data Peminatan"   
-                            data={db['Data Peminatan']}   
-                            columns={TABLE_CONFIG['Data Peminatan'].columns}   
-                            formConfig={TABLE_CONFIG['Data Peminatan'].form}   
-                            onAdd={d=>add('Data Peminatan',d)}   
-                            onDel={id=>del('Data Peminatan',id)}   
-                            onUpdate={(id, d)=>update('Data Peminatan', id, d)}
-                            allowAdd={userRole==='admin'}   
-                            allowDelete={userRole==='admin'}   
-                            allowEdit={userRole==='admin'}
-                        />}
-                        
-                        {page === 'sidang' && <GenericTable   
+                        {page === 'sidang' && <GenericTable    
                             key="tbl-sidang"
-                            title="Jadwal Ujian"   
-                            data={(() => {
-                                let data = jadwalData;
-                                if (userRole === 'dosen' && currentUser?.Nama) {
-                                     const myName = String(currentUser.Nama).trim().toLowerCase();
-                                     data = data.filter(j => {
-                                         const p1 = String(j["Pembimbing 1"] || '').trim().toLowerCase();
-                                         const p2 = String(j["Pembimbing 2"] || '').trim().toLowerCase();
-                                         const pengujiMhs = String(j["Penguji Mahasiswa"] || '').trim().toLowerCase();
-                                         const pengujiJadwal = String(j.Penguji_1 || '').trim().toLowerCase();
-
-                                         return p1 === myName || p2 === myName || pengujiMhs === myName || pengujiJadwal === myName;
-                                     });
-                                }
-                                return data;
-                            })()}   
-                            columns={TABLE_CONFIG['Jadwal Ujian TA'].columns}   
-                            formConfig={jadwalFormConfig}   
-                            onAdd={d=>add('Jadwal Ujian TA',d)}   
-                            onDel={id=>del('Jadwal Ujian TA',id)}   
+                            title="Jadwal Ujian"    
+                            data={db['Jadwal Ujian TA'] || []}    
+                            columns={TABLE_CONFIG['Jadwal Ujian TA'].columns}    
+                            formConfig={TABLE_CONFIG['Jadwal Ujian TA'].form}    
+                            onAdd={d=>add('Jadwal Ujian TA',d)}    
+                            onDel={id=>del('Jadwal Ujian TA',id)}    
                             onImport={data=>importBatch('Jadwal Ujian TA', data)}
-                            allowAdd={userRole==='admin' || userRole==='tendik'}   
+                            allowAdd={userRole==='admin' || userRole==='tendik'}    
                             allowDelete={userRole==='admin' || userRole==='tendik'}
                             allowImport={userRole==='admin'}
                         />}
                         
-                        {page === 'informasi' && <GenericTable   
+                        {page === 'informasi' && <GenericTable    
                             key="tbl-info"
-                            title="Papan Informasi & Pengumuman"   
-                            data={db['Informasi'] || []}   
-                            columns={TABLE_CONFIG['Informasi'].columns}   
-                            formConfig={TABLE_CONFIG['Informasi'].form}   
-                            onAdd={d => add('Informasi', { ...d, Penulis: currentUser?.Nama || (userRole === 'admin' ? 'Admin' : 'Staf') })}   
-                            onDel={id=>del('Informasi',id)}   
+                            title="Papan Informasi & Pengumuman"    
+                            data={db['Informasi'] || []}    
+                            columns={TABLE_CONFIG['Informasi'].columns}    
+                            formConfig={TABLE_CONFIG['Informasi'].form}    
+                            onAdd={d => add('Informasi', { ...d, Penulis: currentUser?.Nama || (userRole === 'admin' ? 'Admin' : 'Staf') })}    
+                            onDel={id=>del('Informasi',id)}    
                             onUpdate={(id, d)=>update('Informasi', id, d)}
-                            allowAdd={userRole==='admin' || userRole==='dosen' || userRole==='tendik'}   
+                            allowAdd={userRole==='admin' || userRole==='dosen' || userRole==='tendik'}    
                             allowDelete={userRole==='admin' || userRole==='dosen' || userRole==='tendik'}
                             allowEdit={userRole==='admin' || userRole==='dosen' || userRole==='tendik'}
                         />}
 
-                        {page === 'administrasi' && <AdministrasiMenu setPage={setPage} config={config} userRole={userRole} />}
+                        {page === 'administrasi' && <AdministrasiMenu setPage={setPage} config={config} setConfig={setConfig} userRole={userRole} />}
                         
-                        {PAGE_MAP[page] && (
-                            <GenericTable   
-                                key={`tbl-admin-${page}`}
-                                title={PAGE_MAP[page].title}
-                                data={db[PAGE_MAP[page].collection] || []}
-                                columns={TABLE_CONFIG[PAGE_MAP[page].configKey].columns}
-                                formConfig={TABLE_CONFIG[PAGE_MAP[page].configKey].form}
-                                onAdd={(d) => {
-                                    if(page === 'pengajuan_judul') {
-                                        handlePengajuanJudul(d);
-                                    } else if(PAGE_MAP[page].status) {
-                                        handleRegistration(PAGE_MAP[page].collection, d, PAGE_MAP[page].status);
-                                    } else {
-                                        add(PAGE_MAP[page].collection, d);
-                                        alert('Data Tersimpan!');
-                                    }
-                                }}
-                                onDel={id=>del(PAGE_MAP[page].collection, id)}
-                                onImport={data=>importBatch(PAGE_MAP[page].collection, data)}
-                                allowAdd={userRole==='admin'}   
-                                allowDelete={userRole==='admin'}
-                                allowImport={userRole==='admin'}
-                                gformUrl={getGformUrl(page)}
-                                onBack={()=>setPage('administrasi')}
-                            />
+                        {['pengajuan_judul','sempro','semhas','daftar_sidang','laporan_ta','surat','yudisium','peminatan'].includes(page) && (
+                            (() => {
+                                const PAGE_MAP = {
+                                    'pengajuan_judul': { title: 'Pengajuan Judul Tugas Akhir', collection: 'Pengajuan Judul', configKey: 'Pengajuan Judul', status: 'Belum Proposal' },
+                                    'sempro': { title: 'Seminar Proposal', collection: 'Pendaftaran Sempro', configKey: 'Pendaftaran Sempro', status: 'Sudah Proposal' },
+                                    'semhas': { title: 'Seminar Hasil', collection: 'Pendaftaran Semhas', configKey: 'Pendaftaran Semhas', status: 'Sudah Hasil' },
+                                    'daftar_sidang': { title: 'Sidang Akhir', collection: 'Pendaftaran Sidang', configKey: 'Pendaftaran Sidang', status: 'Sudah Sidang' },
+                                    'surat': { title: 'Layanan Surat', collection: 'Layanan Surat', configKey: 'Layanan Surat', status: null },  
+                                    'yudisium': { title: 'Pendaftaran Yudisium', collection: 'Data Yudisium', configKey: 'Data Yudisium', status: null },
+                                    'peminatan': { title: 'Data Peminatan', collection: 'Data Peminatan', configKey: 'Data Peminatan', status: null },
+                                    'laporan_ta': { title: 'Laporan Tugas Akhir', collection: 'Laporan TA', configKey: 'Laporan TA', status: null }  
+                                };
+                                const currentPageConfig = PAGE_MAP[page];
+                                return (
+                                    <GenericTable    
+                                        key={`tbl-admin-${page}`}
+                                        title={currentPageConfig.title}
+                                        data={db[currentPageConfig.collection] || []}
+                                        columns={TABLE_CONFIG[currentPageConfig.configKey].columns}
+                                        formConfig={TABLE_CONFIG[currentPageConfig.configKey].form}
+                                        onAdd={(d) => {
+                                            if(page === 'pengajuan_judul') {
+                                                // Handle logic for new title
+                                                const newPengajuan = { id: Date.now(), ...d };
+                                                const existingMhs = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.NPM === d.NPM);
+                                                let newMhsList = [...(db['Mahasiswa Tugas Akhir'] || [])];
+
+                                                if (existingMhs) {
+                                                    const updatedData = { ...existingMhs, Judul: d.Judul, Peminatan: d.Peminatan, Status: 'Belum Proposal' };
+                                                    newMhsList = newMhsList.map(m => m.NPM === d.NPM ? updatedData : m);
+                                                    save('update', 'Mahasiswa Tugas Akhir', updatedData); 
+                                                } else {
+                                                    const newMhs = {
+                                                        id: Date.now() + 1,
+                                                        Nama: d.Nama,
+                                                        NPM: d.NPM,
+                                                        Prodi: "S1 Ilmu Kesehatan Masyarakat",
+                                                        Angkatan: "20" + (d.NPM ? d.NPM.substring(2,4) : "20"), 
+                                                        Peminatan: d.Peminatan,
+                                                        Judul: d.Judul,
+                                                        Status: "Belum Proposal",
+                                                        Pembimbing_1: "-",
+                                                        Pembimbing_2: "-"
+                                                    };
+                                                    newMhsList.push(newMhs);
+                                                    save('create', 'Mahasiswa Tugas Akhir', newMhs); 
+                                                }
+                                                add(currentPageConfig.collection, d);
+                                                batchUpdate({
+                                                    [currentPageConfig.collection]: [...(db[currentPageConfig.collection] || []), newPengajuan],
+                                                    'Mahasiswa Tugas Akhir': newMhsList
+                                                });
+                                                alert("Pengajuan Judul tersimpan!");
+                                            } else if(currentPageConfig.status) {
+                                                // Handle logic for status update
+                                                const newReg = { id: Date.now(), ...d };
+                                                const existingMhs = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.Nama === d.Nama);
+                                                let newMhsList = [...(db['Mahasiswa Tugas Akhir'] || [])];
+
+                                                if (existingMhs) {
+                                                    const updatedMhs = { ...existingMhs, Status: currentPageConfig.status };
+                                                    newMhsList = newMhsList.map(m => m.id === existingMhs.id ? updatedMhs : m);
+                                                    save('update', 'Mahasiswa Tugas Akhir', updatedMhs); 
+                                                }
+                                                add(currentPageConfig.collection, d);
+                                                batchUpdate({
+                                                    [currentPageConfig.collection]: [...(db[currentPageConfig.collection] || []), newReg],
+                                                    'Mahasiswa Tugas Akhir': newMhsList
+                                                });
+                                                alert(`Pendaftaran berhasil! Status mahasiswa menjadi '${currentPageConfig.status}'.`);
+                                            } else {
+                                                add(currentPageConfig.collection, d);
+                                                alert('Data Tersimpan!');
+                                            }
+                                        }}
+                                        onDel={id=>del(currentPageConfig.collection, id)}
+                                        onImport={data=>importBatch(currentPageConfig.collection, data)}
+                                        allowAdd={userRole==='admin'}    
+                                        allowDelete={userRole==='admin'}
+                                        allowImport={userRole==='admin'}
+                                        onBack={()=>setPage('administrasi')}
+                                    />
+                                );
+                            })()
                         )}
 
                         {page === 'unduh' && <GenericTable
@@ -2422,38 +2157,6 @@
                             allowDelete={userRole==='admin'}
                             allowImport={userRole==='admin'}
                         />}
-
-                        {page === 'progres' && userRole === 'mahasiswa' && (
-                            <StudentProgress db={db} currentUser={currentUser} onUpdate={(collection, id, data) => update(collection, id, data)} />
-                        )}
-
-                        {/* --- GUIDANCE PAGE --- */}
-                        {page === 'bimbingan' && (userRole === 'mahasiswa' || userRole === 'dosen') && (
-                            <BimbinganPage currentUser={currentUser} userRole={userRole} db={db} add={add} update={update} />
-                        )}
-                        
-                        {page === 'settings' && userRole === 'admin' && (
-                            <div className="max-w-lg mx-auto glass p-8 rounded-3xl shadow-xl border border-white/60 animate-slide-up">
-                                <h2 className="text-2xl font-bold mb-8 text-purple-900 text-center flex items-center justify-center gap-2"><Icon path={PATHS.Cog}/> Pengaturan Sistem</h2>
-                                <div className="space-y-5">
-                                    <div><label className="text-xs font-bold text-purple-800/70 uppercase mb-2 block">Nama Aplikasi</label><input className="input-modern" value={config.app_name} onChange={e=>setConfig(p=>({...p,app_name:e.target.value}))}/></div>
-                                    <div><label className="text-xs font-bold text-purple-800/70 uppercase mb-2 block">Google Sheet Script URL</label><input className="input-modern" placeholder="https://script.google.com/..." value={config.scriptUrl} onChange={e=>setConfig(p=>({...p,scriptUrl:e.target.value}))}/></div>
-                                    <div className="pt-4 border-t border-purple-100">
-                                        <p className="text-sm font-bold text-purple-900 mb-4">Link Google Form (Pendaftaran)</p>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="col-span-2"><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Pengajuan Judul</label><input className="input-modern" value={config.gform_pengajuan_judul || ''} onChange={e=>setConfig(p=>({...p,gform_pengajuan_judul:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Sempro</label><input className="input-modern" value={config.gform_sempro || ''} onChange={e=>setConfig(p=>({...p,gform_sempro:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Semhas</label><input className="input-modern" value={config.gform_semhas || ''} onChange={e=>setConfig(p=>({...p,gform_semhas:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Sidang</label><input className="input-modern" value={config.gform_sidang || ''} onChange={e=>setConfig(p=>({...p,gform_sidang:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Surat</label><input className="input-modern" value={config.gform_surat || ''} onChange={e=>setConfig(p=>({...p,gform_surat:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Yudisium</label><input className="input-modern" value={config.gform_yudisium || ''} onChange={e=>setConfig(p=>({...p,gform_yudisium:e.target.value}))}/></div>
-                                            <div><label className="text-[10px] font-bold text-purple-500 uppercase block">Form Laporan TA</label><input className="input-modern" value={config.gform_laporan_ta || ''} onChange={e=>setConfig(p=>({...p,gform_laporan_ta:e.target.value}))}/></div>
-                                        </div>
-                                    </div>
-                                    <button onClick={()=>{refresh(); alert('Pengaturan Disimpan!')}} className="w-full bg-purple-600 text-white py-3.5 rounded-xl font-bold hover:bg-purple-700 transition shadow-lg shadow-purple-500/30">Simpan & Refresh</button>
-                                </div>
-                            </div>
-                        )}
                     </main>
 
                     {showLogin && (
@@ -2466,13 +2169,12 @@
                         <NotificationPopup data={notification} onClose={() => setNotification(null)} />
                     )}
 
-                    {/* --- CHATBOT COMPONENT --- */}
-                    <ChatBot   
-                        db={db}   
-                        currentUser={currentUser}   
+                    <ChatBot 
+                        db={db} 
+                        currentUser={currentUser} 
                         userRole={userRole}
-                        isOpen={isChatOpen}   
-                        onToggle={() => setIsChatOpen(!isChatOpen)}   
+                        isOpen={isChatOpen} 
+                        onToggle={() => setIsChatOpen(!isChatOpen)} 
                     />
                 </div>
             );
