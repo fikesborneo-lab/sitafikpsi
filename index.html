@@ -183,7 +183,6 @@
             Clock: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z",
             MessageSquare: "M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z",
             ChevronRight: "M9 18l6-6-6-6",
-            Home: "M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z M9 22V12h6v10"
         };
 
         const AUTH_TOKEN = "MTAxMDE5OTA="; 
@@ -778,13 +777,19 @@
                             {mySchedules.length === 0 ? (
                                 <div className="text-center py-10 text-gray-400 text-sm">Belum ada jadwal.</div>
                             ) : (
-                                mySchedules.map(item => (
+                                mySchedules.map(item => {
+                                    // PERBAIKAN: Format Tanggal
+                                    const dateObj = new Date(item.date);
+                                    const monthStr = dateObj.toLocaleDateString('id-ID', { month: 'short' }); 
+                                    const dayStr = dateObj.getDate();
+
+                                    return (
                                     <div key={item.id} className="p-4 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition">
                                             <div className="flex justify-between items-start">
                                                 <div className="flex gap-4">
                                                     <div className={`w-12 h-12 rounded-xl flex flex-col items-center justify-center border ${item.status === 'approved' ? 'bg-green-50 border-green-200 text-green-700' : item.status === 'pending' ? 'bg-orange-50 border-orange-200 text-orange-700' : 'bg-gray-50 border-gray-200 text-gray-500'}`}>
-                                                        <span className="text-[10px] font-bold uppercase">{new Date(item.date).toLocaleString('default', { month: 'short' })}</span>
-                                                        <span className="text-lg font-bold leading-none">{new Date(item.date).getDate()}</span>
+                                                        <span className="text-[10px] font-bold uppercase">{monthStr}</span>
+                                                        <span className="text-lg font-bold leading-none">{dayStr}</span>
                                                     </div>
                                                     <div>
                                                         <h4 className="font-bold text-gray-800 text-sm">{item.topic}</h4>
@@ -804,98 +809,9 @@
                                                 )}
                                             </div>
                                     </div>
-                                ))
+                                )})
                             )}
                         </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const LecturerProgressDashboard = ({ currentUser, db }) => {
-            const myStudents = useMemo(() => {
-                if (!currentUser?.Nama) return [];
-                const myName = String(currentUser.Nama).trim().toLowerCase();
-                return (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
-                    const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                    const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                    return p1 === myName || p2 === myName;
-                });
-            }, [db, currentUser]);
-
-            const getProgressColor = (bab) => {
-                if (!bab) return 'bg-gray-100 text-gray-500';
-                if (bab.includes('Bab')) {
-                    const num = parseInt(bab.replace(/\D/g,''));
-                    if (num === 6) return 'bg-green-100 text-green-700';
-                    if (num >= 4) return 'bg-blue-100 text-blue-700';
-                    if (num >= 2) return 'bg-purple-100 text-purple-700';
-                }
-                return 'bg-orange-100 text-orange-700';
-            };
-
-            if (myStudents.length === 0) {
-                return (
-                    <div className="glass p-8 rounded-3xl text-center text-gray-400 animate-fade-in">
-                        <Icon path={PATHS.Users} size={48} className="mx-auto mb-2 opacity-50"/>
-                        <p>Belum ada mahasiswa bimbingan.</p>
-                    </div>
-                )
-            }
-
-            return (
-                <div className="space-y-6 animate-fade-in pb-20">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <h2 className="text-2xl font-bold text-purple-900">Progres Mahasiswa</h2>
-                            <p className="text-sm text-gray-500">Monitoring terkini laporan penulisan tugas akhir mahasiswa bimbingan.</p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4">
-                        {myStudents.map((student, idx) => (
-                            <div key={student.id} className="glass p-5 rounded-3xl border border-white/60 shadow-lg hover:shadow-xl transition group">
-                                <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                                    <div className="flex items-start gap-4 flex-1">
-                                        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-200 to-pink-200 flex items-center justify-center text-purple-700 font-bold border-2 border-white shadow-sm text-lg">
-                                            {student.Nama.charAt(0)}
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-bold text-purple-900 text-lg leading-tight">{student.Nama}</h3>
-                                            <p className="text-xs text-gray-500 font-medium">{student.NPM} • {student.Prodi}</p>
-                                            
-                                            <div className="mt-3 flex flex-wrap gap-2 items-center">
-                                                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${getProgressColor(student.ProgresBab)}`}>
-                                                    {student.ProgresBab || 'Belum Lapor'}
-                                                </span>
-                                                <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-100">
-                                                   {student.BimbinganCount || 0}x Bimbingan
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="md:w-1/3 bg-white/50 p-3 rounded-xl border border-white">
-                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Status Tahap</div>
-                                            <div className="text-sm font-bold text-purple-900 mb-2">{student.Status}</div>
-                                            
-                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Update Terakhir</div>
-                                            <div className="text-xs text-gray-600">
-                                                {student.LastUpdateProgres 
-                                                    ? formatDateId(student.LastUpdateProgres, true)
-                                                    : '-'
-                                                }
-                                            </div>
-                                            
-                                            {student.ProgresDeskripsi && (
-                                                <div className="mt-2 pt-2 border-t border-gray-100">
-                                                    <div className="text-[10px] text-gray-400 italic">"{student.ProgresDeskripsi.length > 40 ? student.ProgresDeskripsi.substring(0,40)+'...' : student.ProgresDeskripsi}"</div>
-                                                </div>
-                                            )}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
                     </div>
                 </div>
             );
@@ -1011,7 +927,335 @@
             );
         };
 
-        // --- UPDATED: ADMINISTRASI MENU (INLINE GFORM EDIT) ---
+        const StudentProgress = ({ db, currentUser, onUpdate }) => {
+            const studentData = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.NPM === currentUser.NPM);
+            const babOptions = ['Pengambilan data awal proposal','Bab 1','Bab 2','Bab 3','Bab 4','Bab 5','Bab 6','Penelitian'];
+            const [formData, setFormData] = useState({ judul: '', bimbingan: 0, deskripsi: '', bab: 'Pengambilan data awal proposal' });
+            const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+            useEffect(() => {
+                if (studentData && !isDataLoaded) {
+                    setFormData({
+                        judul: studentData.Judul || '',
+                        bimbingan: studentData.BimbinganCount || 0,
+                        deskripsi: studentData.ProgresDeskripsi || '',
+                        bab: studentData.ProgresBab || 'Pengambilan data awal proposal'
+                    });
+                    setIsDataLoaded(true);
+                }
+            }, [studentData, isDataLoaded]);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (!studentData) return alert("Data mahasiswa tidak ditemukan.");
+                onUpdate('Mahasiswa Tugas Akhir', studentData.id, {
+                    Judul: formData.judul,
+                    BimbinganCount: parseInt(formData.bimbingan),
+                    ProgresDeskripsi: formData.deskripsi,
+                    ProgresBab: formData.bab,
+                    LastUpdateProgres: new Date().toISOString()
+                });
+                alert("Data Tugas Akhir & Progres berhasil diperbarui!");
+            };
+
+            if (!studentData) return <div className="p-8 text-center text-gray-500">Data mahasiswa tidak ditemukan.</div>;
+
+            return (
+                <div className="max-w-3xl mx-auto animate-fade-in">
+                    <h2 className="text-2xl font-bold text-purple-900 mb-6 flex items-center gap-3"><Icon path={PATHS.Chart} className="text-pink-500"/> Data & Progres Tugas Akhir</h2>
+                    <div className="glass p-8 rounded-3xl shadow-xl border border-white/60">
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Judul Tugas Akhir</label><textarea className="textarea-modern min-h-[100px] font-semibold text-purple-900" value={formData.judul} onChange={e => setFormData({...formData, judul: e.target.value})} required /></div>
+                            <div>
+                                <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Posisi Progres Penulisan</label>
+                                <div className="relative"><select className="input-modern cursor-pointer font-bold text-purple-700" value={formData.bab} onChange={e => setFormData({...formData, bab: e.target.value})}>{babOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}</select><Icon path={PATHS.ChevronDown} className="absolute right-3 top-3 text-purple-400 pointer-events-none" size={16}/></div>
+                            </div>
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Jumlah Bimbingan (Kali)</label><input type="number" min="0" className="input-modern" value={formData.bimbingan} onChange={e => setFormData({...formData, bimbingan: e.target.value})} required /></div>
+                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Detail Progres</label><textarea className="textarea-modern min-h-[100px]" value={formData.deskripsi} onChange={e => setFormData({...formData, deskripsi: e.target.value})} placeholder="Ceritakan progres..." required /></div>
+                            <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-purple-500/40">Simpan Perubahan</button>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        const LecturerProgressDashboard = ({ currentUser, db }) => {
+            const myStudents = useMemo(() => {
+                if (!currentUser?.Nama) return [];
+                const myName = String(currentUser.Nama).trim().toLowerCase();
+                return (db['Mahasiswa Tugas Akhir'] || []).filter(m => {
+                    const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                    const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                    return p1 === myName || p2 === myName;
+                });
+            }, [db, currentUser]);
+
+            const getProgressColor = (bab) => {
+                if (!bab) return 'bg-gray-100 text-gray-500';
+                if (bab.includes('Bab')) {
+                    const num = parseInt(bab.replace(/\D/g,''));
+                    if (num === 6) return 'bg-green-100 text-green-700';
+                    if (num >= 4) return 'bg-blue-100 text-blue-700';
+                    if (num >= 2) return 'bg-purple-100 text-purple-700';
+                }
+                return 'bg-orange-100 text-orange-700';
+            };
+
+            if (myStudents.length === 0) {
+                return (
+                    <div className="glass p-8 rounded-3xl text-center text-gray-400 animate-fade-in">
+                        <Icon path={PATHS.Users} size={48} className="mx-auto mb-2 opacity-50"/>
+                        <p>Belum ada mahasiswa bimbingan.</p>
+                    </div>
+                )
+            }
+
+            return (
+                <div className="space-y-6 animate-fade-in pb-20">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-2xl font-bold text-purple-900">Progres Mahasiswa</h2>
+                            <p className="text-sm text-gray-500">Monitoring terkini laporan penulisan tugas akhir mahasiswa bimbingan.</p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                        {myStudents.map((student, idx) => (
+                            <div key={student.id} className="glass p-5 rounded-3xl border border-white/60 shadow-lg hover:shadow-xl transition group">
+                                <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                    <div className="flex items-start gap-4 flex-1">
+                                        <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-200 to-pink-200 flex items-center justify-center text-purple-700 font-bold border-2 border-white shadow-sm text-lg">
+                                            {student.Nama.charAt(0)}
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="font-bold text-purple-900 text-lg leading-tight">{student.Nama}</h3>
+                                            <p className="text-xs text-gray-500 font-medium">{student.NPM} • {student.Prodi}</p>
+                                            
+                                            <div className="mt-3 flex flex-wrap gap-2 items-center">
+                                                <span className={`px-2.5 py-1 rounded-lg text-xs font-bold ${getProgressColor(student.ProgresBab)}`}>
+                                                    {student.ProgresBab || 'Belum Lapor'}
+                                                </span>
+                                                <span className="text-xs text-gray-400 bg-gray-50 px-2 py-1 rounded border border-gray-100">
+                                                   {student.BimbinganCount || 0}x Bimbingan
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="md:w-1/3 bg-white/50 p-3 rounded-xl border border-white">
+                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Status Tahap</div>
+                                            <div className="text-sm font-bold text-purple-900 mb-2">{student.Status}</div>
+                                            
+                                            <div className="text-[10px] font-bold text-purple-400 uppercase mb-1">Update Terakhir</div>
+                                            <div className="text-xs text-gray-600">
+                                                {student.LastUpdateProgres 
+                                                    ? formatDateId(student.LastUpdateProgres, true)
+                                                    : '-'
+                                                }
+                                            </div>
+                                            
+                                            {student.ProgresDeskripsi && (
+                                                <div className="mt-2 pt-2 border-t border-gray-100">
+                                                    <div className="text-[10px] text-gray-400 italic">"{student.ProgresDeskripsi.length > 40 ? student.ProgresDeskripsi.substring(0,40)+'...' : student.ProgresDeskripsi}"</div>
+                                                </div>
+                                            )}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const Dashboard = ({ db, userRole, currentUser }) => {
+            const [greeting, setGreeting] = useState('');
+            
+            const globalMhs = db['Mahasiswa Tugas Akhir'] || [];
+            const globalLulusan = db['Mahasiswa Lulusan'] || [];
+            const rawDosen = db['Data Dosen'] || [];  
+            const globalJadwal = db['Jadwal Ujian TA'] || [];
+            
+            const dashboardMhs = useMemo(() => {
+                if (userRole === 'dosen' && currentUser?.Nama) {
+                    const myName = String(currentUser.Nama).trim().toLowerCase();
+                    return globalMhs.filter(m => {
+                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
+                        return p1 === myName || p2 === myName || penguji === myName;
+                    });
+                }
+                return globalMhs;  
+            }, [globalMhs, userRole, currentUser]);
+
+            const dashboardLulusan = useMemo(() => {
+                if (userRole === 'dosen' && currentUser?.Nama) {
+                    const myName = String(currentUser.Nama).trim().toLowerCase();
+                    return globalLulusan.filter(m => {
+                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
+                        return p1 === myName || p2 === myName || penguji === myName;
+                    });
+                }
+                return globalLulusan;
+            }, [globalLulusan, userRole, currentUser]);
+
+            const allDosen = useMemo(() => {
+                const counts = {};
+                globalMhs.forEach(m => {
+                     if(m.Pembimbing_1 && m.Pembimbing_1 !== '-' && m.Pembimbing_1.trim() !== '') {
+                        const n = m.Pembimbing_1.trim();
+                        counts[n] = (counts[n] || 0) + 1;
+                     }
+                     if(m.Pembimbing_2 && m.Pembimbing_2 !== '-' && m.Pembimbing_2.trim() !== '') {
+                        const n = m.Pembimbing_2.trim();
+                        counts[n] = (counts[n] || 0) + 1;
+                     }
+                });
+                return rawDosen.map(d => ({
+                    ...d,
+                    Terisi: counts[d.Nama.trim()] || 0
+                }));
+            }, [globalMhs, rawDosen]);
+
+            const dashboardJadwal = useMemo(() => {
+                if (userRole === 'dosen' && currentUser?.Nama) {
+                     const myName = String(currentUser.Nama).trim().toLowerCase();
+                     const myStudentNames = new Set(dashboardMhs.map(m => m.Nama));
+                     
+                     return globalJadwal.filter(j => {
+                         const isMyStudent = myStudentNames.has(j.Mahasiswa);
+                         const isMySchedule = String(j.Penguji_1 || '').trim().toLowerCase() === myName;
+                         return isMyStudent || isMySchedule;
+                     });
+                }
+                return globalJadwal;
+            }, [globalJadwal, dashboardMhs, userRole, currentUser]);
+
+            useEffect(() => {
+                const hour = new Date().getHours();
+                if (hour < 11) setGreeting('Selamat Pagi');
+                else if (hour < 15) setGreeting('Selamat Siang');
+                else if (hour < 19) setGreeting('Selamat Sore');
+                else setGreeting('Selamat Malam');
+            }, []);
+
+            const stats = {
+                totalMhs: dashboardMhs.length,
+                totalLulusan: dashboardLulusan.length, // Alumni stats
+                belumProposal: dashboardMhs.filter(m => m.Status === 'Belum Proposal').length,
+                sempro: dashboardMhs.filter(m => m.Status === 'Sudah Proposal').length,
+                semhas: dashboardMhs.filter(m => m.Status === 'Sudah Hasil').length,
+                sidang: dashboardMhs.filter(m => m.Status === 'Sudah Sidang').length,
+                totalDosen: allDosen.length  
+            };
+
+            const StatCard = ({ title, value, colorClass, iconClass, delay }) => (
+                <div className="glass p-6 rounded-3xl shadow-lg border border-white/60 hover:transform hover:-translate-y-1 transition duration-300 relative overflow-hidden group animate-slide-up" style={{animationDelay: delay}}>
+                    <div className={`absolute -right-6 -bottom-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity ${iconClass} transform group-hover:scale-125 duration-500`}>
+                        <Icon path={PATHS.Chart} size={100} />
+                    </div>
+                    <div className="text-purple-900/60 text-[10px] uppercase font-bold tracking-wider mb-2">{title}</div>
+                    <div className={`text-4xl font-extrabold ${colorClass} drop-shadow-sm flex items-baseline gap-2`}>
+                        {value} <span className="text-sm font-normal text-gray-400">Org</span>
+                    </div>
+                </div>
+            );
+
+            const WorkloadChart = ({ dosenData }) => {
+                return (
+                    <div className="space-y-5">
+                        {dosenData.map((d, idx) => {
+                            const percent = Math.min((d.Terisi / d.Kuota) * 100, 100);
+                            const isFull = d.Terisi >= d.Kuota;
+                            return (
+                                <div key={d.id} className="relative group cursor-default">
+                                    <div className="flex justify-between text-sm mb-1.5 font-medium items-end">
+                                            <div className="flex flex-col">
+                                                <span className="text-purple-900 font-bold">{d.Nama}</span>
+                                                <span className="text-[10px] text-purple-400">{d.Keahlian}</span>
+                                            </div>
+                                            <span className={`font-bold px-2 py-0.5 rounded-md text-xs ${isFull ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                                                {d.Terisi}/{d.Kuota}
+                                            </span>
+                                    </div>
+                                    <div className="w-full bg-white/50 rounded-full h-2.5 overflow-hidden shadow-inner">
+                                            <div className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm relative overflow-hidden ${isFull ? 'bg-gradient-to-r from-red-400 to-red-600' : 'bg-gradient-to-r from-violet-400 to-fuchsia-500'}`} style={{ width: `${percent}%`, transitionDelay: `${idx * 100}ms` }}>
+                                                <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse-slow"></div>
+                                            </div>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="space-y-8 pb-24 animate-fade-in">
+                    <div className="flex justify-between items-end">
+                        <div>
+                            <h1 className="text-3xl md:text-4xl font-bold text-purple-900 mb-1">{greeting}</h1>
+                            <p className="text-purple-500 font-medium">Berikut ringkasan aktivitas akademik {userRole === 'dosen' ? 'bimbingan Anda' : 'hari ini'}.</p>
+                        </div>
+                        <div className="hidden md:block text-right">
+                            <div className="text-2xl font-bold text-purple-800">{formatDateId(new Date())}</div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                        <StatCard title="Total Mahasiswa" value={stats.totalMhs} colorClass="text-purple-700" iconClass="text-purple-500" delay="0ms"/>
+                        {/* New Alumni Card */}
+                        <StatCard title="Total Alumni" value={stats.totalLulusan} colorClass="text-blue-600" iconClass="text-blue-500" delay="50ms"/>
+                        <StatCard title="Data Dosen" value={stats.totalDosen} colorClass="text-indigo-600" iconClass="text-indigo-500" delay="100ms"/>
+                        <StatCard title="Belum Proposal" value={stats.belumProposal} colorClass="text-emerald-500" iconClass="text-emerald-500" delay="200ms"/>
+                        <StatCard title="Sudah Proposal" value={stats.sempro} colorClass="text-orange-500" iconClass="text-orange-500" delay="300ms"/>
+                        <StatCard title="Sudah Hasil" value={stats.semhas} colorClass="text-pink-500" iconClass="text-pink-500" delay="400ms"/>
+                        <StatCard title="Sudah Sidang" value={stats.sidang} colorClass="text-rose-600" iconClass="text-rose-500" delay="500ms"/>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+                        <div className="md:col-span-2 glass p-6 md:p-8 rounded-3xl shadow-xl border border-white/60">
+                            <h3 className="font-bold text-lg text-purple-900 mb-6 flex items-center gap-3">
+                                <span className="p-2 bg-purple-100 text-purple-600 rounded-lg"><Icon path={PATHS.Chart}/></span>    
+                                Beban Bimbingan Dosen (Global)
+                            </h3>
+                            <WorkloadChart dosenData={allDosen} />
+                        </div>
+
+                        <div className="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col h-96">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500 opacity-20 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                            <h3 className="font-bold text-lg mb-6 flex items-center gap-3 relative z-10">
+                                <span className="p-2 bg-white/10 rounded-lg"><Icon path={PATHS.Book}/></span>
+                                Jadwal Terdekat
+                            </h3>
+                            <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar relative z-10">
+                                {dashboardJadwal.slice(0, 5).map((j, i) => (
+                                    <div key={i} className="bg-white/5 backdrop-blur-sm p-3 rounded-xl border border-white/10 hover:bg-white/10 transition group">
+                                            <div className="flex justify-between items-start mb-1">
+                                                <div className="font-bold text-sm text-yellow-300 group-hover:text-yellow-200 transition">{j.Mahasiswa}</div>
+                                                <span className="text-[10px] bg-purple-600 px-2 py-0.5 rounded text-white">{j.Jenis.split(' ')[1] || j.Jenis}</span>
+                                            </div>
+                                            <div className="text-xs text-slate-300 flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                                                 <span className="flex items-center gap-1 text-pink-300 font-medium">
+                                                    <Icon path={PATHS.FileText} size={12}/>    
+                                                    {formatDateId(j.Tanggal)}
+                                                 </span>
+                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {j.Jam}</span>
+                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Home} size={12}/> {j.Ruang}</span>
+                                            </div>
+                                    </div>
+                                ))}
+                                {dashboardJadwal.length === 0 && <p className="text-sm text-slate-400 text-center py-10">Belum ada jadwal {userRole === 'dosen' ? 'untuk mahasiswa Anda' : ''}.</p>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const AdministrasiMenu = ({ setPage, config, setConfig, userRole }) => {
             const [editingId, setEditingId] = useState(null);
             const [tempLink, setTempLink] = useState('');
@@ -1589,246 +1833,6 @@
             );
         };
 
-        const StudentProgress = ({ db, currentUser, onUpdate }) => {
-            const studentData = (db['Mahasiswa Tugas Akhir'] || []).find(m => m.NPM === currentUser.NPM);
-            const babOptions = ['Pengambilan data awal proposal','Bab 1','Bab 2','Bab 3','Bab 4','Bab 5','Bab 6','Penelitian'];
-            const [formData, setFormData] = useState({ judul: '', bimbingan: 0, deskripsi: '', bab: 'Pengambilan data awal proposal' });
-            const [isDataLoaded, setIsDataLoaded] = useState(false);
-
-            useEffect(() => {
-                if (studentData && !isDataLoaded) {
-                    setFormData({
-                        judul: studentData.Judul || '',
-                        bimbingan: studentData.BimbinganCount || 0,
-                        deskripsi: studentData.ProgresDeskripsi || '',
-                        bab: studentData.ProgresBab || 'Pengambilan data awal proposal'
-                    });
-                    setIsDataLoaded(true);
-                }
-            }, [studentData, isDataLoaded]);
-
-            const handleSubmit = (e) => {
-                e.preventDefault();
-                if (!studentData) return alert("Data mahasiswa tidak ditemukan.");
-                onUpdate('Mahasiswa Tugas Akhir', studentData.id, {
-                    Judul: formData.judul,
-                    BimbinganCount: parseInt(formData.bimbingan),
-                    ProgresDeskripsi: formData.deskripsi,
-                    ProgresBab: formData.bab,
-                    LastUpdateProgres: new Date().toISOString()
-                });
-                alert("Data Tugas Akhir & Progres berhasil diperbarui!");
-            };
-
-            if (!studentData) return <div className="p-8 text-center text-gray-500">Data mahasiswa tidak ditemukan.</div>;
-
-            return (
-                <div className="max-w-3xl mx-auto animate-fade-in">
-                    <h2 className="text-2xl font-bold text-purple-900 mb-6 flex items-center gap-3"><Icon path={PATHS.Chart} className="text-pink-500"/> Data & Progres Tugas Akhir</h2>
-                    <div className="glass p-8 rounded-3xl shadow-xl border border-white/60">
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Judul Tugas Akhir</label><textarea className="textarea-modern min-h-[100px] font-semibold text-purple-900" value={formData.judul} onChange={e => setFormData({...formData, judul: e.target.value})} required /></div>
-                            <div>
-                                <label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Posisi Progres Penulisan</label>
-                                <div className="relative"><select className="input-modern cursor-pointer font-bold text-purple-700" value={formData.bab} onChange={e => setFormData({...formData, bab: e.target.value})}>{babOptions.map(opt => (<option key={opt} value={opt}>{opt}</option>))}</select><Icon path={PATHS.ChevronDown} className="absolute right-3 top-3 text-purple-400 pointer-events-none" size={16}/></div>
-                            </div>
-                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Jumlah Bimbingan (Kali)</label><input type="number" min="0" className="input-modern" value={formData.bimbingan} onChange={e => setFormData({...formData, bimbingan: e.target.value})} required /></div>
-                            <div><label className="text-sm font-bold text-purple-800 uppercase mb-2 block">Detail Progres</label><textarea className="textarea-modern min-h-[100px]" value={formData.deskripsi} onChange={e => setFormData({...formData, deskripsi: e.target.value})} placeholder="Ceritakan progres..." required /></div>
-                            <button type="submit" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-bold shadow-lg hover:shadow-purple-500/40">Simpan Perubahan</button>
-                        </form>
-                    </div>
-                </div>
-            );
-        };
-
-        const Dashboard = ({ db, userRole, currentUser }) => {
-            const [greeting, setGreeting] = useState('');
-            
-            const globalMhs = db['Mahasiswa Tugas Akhir'] || [];
-            const globalLulusan = db['Mahasiswa Lulusan'] || [];
-            const rawDosen = db['Data Dosen'] || [];  
-            const globalJadwal = db['Jadwal Ujian TA'] || [];
-            
-            const dashboardMhs = useMemo(() => {
-                if (userRole === 'dosen' && currentUser?.Nama) {
-                    const myName = String(currentUser.Nama).trim().toLowerCase();
-                    return globalMhs.filter(m => {
-                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
-                        return p1 === myName || p2 === myName || penguji === myName;
-                    });
-                }
-                return globalMhs;  
-            }, [globalMhs, userRole, currentUser]);
-
-            const dashboardLulusan = useMemo(() => {
-                if (userRole === 'dosen' && currentUser?.Nama) {
-                    const myName = String(currentUser.Nama).trim().toLowerCase();
-                    return globalLulusan.filter(m => {
-                        const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                        const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                        const penguji = String(m.Penguji || '').trim().toLowerCase(); // Include Penguji filter
-                        return p1 === myName || p2 === myName || penguji === myName;
-                    });
-                }
-                return globalLulusan;
-            }, [globalLulusan, userRole, currentUser]);
-
-            const allDosen = useMemo(() => {
-                const counts = {};
-                globalMhs.forEach(m => {
-                     if(m.Pembimbing_1 && m.Pembimbing_1 !== '-' && m.Pembimbing_1.trim() !== '') {
-                        const n = m.Pembimbing_1.trim();
-                        counts[n] = (counts[n] || 0) + 1;
-                     }
-                     if(m.Pembimbing_2 && m.Pembimbing_2 !== '-' && m.Pembimbing_2.trim() !== '') {
-                        const n = m.Pembimbing_2.trim();
-                        counts[n] = (counts[n] || 0) + 1;
-                     }
-                });
-                return rawDosen.map(d => ({
-                    ...d,
-                    Terisi: counts[d.Nama.trim()] || 0
-                }));
-            }, [globalMhs, rawDosen]);
-
-            const dashboardJadwal = useMemo(() => {
-                if (userRole === 'dosen' && currentUser?.Nama) {
-                     const myName = String(currentUser.Nama).trim().toLowerCase();
-                     const myStudentNames = new Set(dashboardMhs.map(m => m.Nama));
-                     
-                     return globalJadwal.filter(j => {
-                         const isMyStudent = myStudentNames.has(j.Mahasiswa);
-                         const isMySchedule = String(j.Penguji_1 || '').trim().toLowerCase() === myName;
-                         return isMyStudent || isMySchedule;
-                     });
-                }
-                return globalJadwal;
-            }, [globalJadwal, dashboardMhs, userRole, currentUser]);
-
-            useEffect(() => {
-                const hour = new Date().getHours();
-                if (hour < 11) setGreeting('Selamat Pagi');
-                else if (hour < 15) setGreeting('Selamat Siang');
-                else if (hour < 19) setGreeting('Selamat Sore');
-                else setGreeting('Selamat Malam');
-            }, []);
-
-            const stats = {
-                totalMhs: dashboardMhs.length,
-                totalLulusan: dashboardLulusan.length, // Alumni stats
-                belumProposal: dashboardMhs.filter(m => m.Status === 'Belum Proposal').length,
-                sempro: dashboardMhs.filter(m => m.Status === 'Sudah Proposal').length,
-                semhas: dashboardMhs.filter(m => m.Status === 'Sudah Hasil').length,
-                sidang: dashboardMhs.filter(m => m.Status === 'Sudah Sidang').length,
-                totalDosen: allDosen.length  
-            };
-
-            const StatCard = ({ title, value, colorClass, iconClass, delay }) => (
-                <div className="glass p-6 rounded-3xl shadow-lg border border-white/60 hover:transform hover:-translate-y-1 transition duration-300 relative overflow-hidden group animate-slide-up" style={{animationDelay: delay}}>
-                    <div className={`absolute -right-6 -bottom-6 p-4 opacity-5 group-hover:opacity-10 transition-opacity ${iconClass} transform group-hover:scale-125 duration-500`}>
-                        <Icon path={PATHS.Chart} size={100} />
-                    </div>
-                    <div className="text-purple-900/60 text-[10px] uppercase font-bold tracking-wider mb-2">{title}</div>
-                    <div className={`text-4xl font-extrabold ${colorClass} drop-shadow-sm flex items-baseline gap-2`}>
-                        {value} <span className="text-sm font-normal text-gray-400">Org</span>
-                    </div>
-                </div>
-            );
-
-            const WorkloadChart = ({ dosenData }) => {
-                return (
-                    <div className="space-y-5">
-                        {dosenData.map((d, idx) => {
-                            const percent = Math.min((d.Terisi / d.Kuota) * 100, 100);
-                            const isFull = d.Terisi >= d.Kuota;
-                            return (
-                                <div key={d.id} className="relative group cursor-default">
-                                    <div className="flex justify-between text-sm mb-1.5 font-medium items-end">
-                                            <div className="flex flex-col">
-                                                <span className="text-purple-900 font-bold">{d.Nama}</span>
-                                                <span className="text-[10px] text-purple-400">{d.Keahlian}</span>
-                                            </div>
-                                            <span className={`font-bold px-2 py-0.5 rounded-md text-xs ${isFull ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
-                                                {d.Terisi}/{d.Kuota}
-                                            </span>
-                                    </div>
-                                    <div className="w-full bg-white/50 rounded-full h-2.5 overflow-hidden shadow-inner">
-                                            <div className={`h-full rounded-full transition-all duration-1000 ease-out shadow-sm relative overflow-hidden ${isFull ? 'bg-gradient-to-r from-red-400 to-red-600' : 'bg-gradient-to-r from-violet-400 to-fuchsia-500'}`} style={{ width: `${percent}%`, transitionDelay: `${idx * 100}ms` }}>
-                                                <div className="absolute top-0 left-0 w-full h-full bg-white/20 animate-pulse-slow"></div>
-                                            </div>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                );
-            };
-
-            return (
-                <div className="space-y-8 pb-24 animate-fade-in">
-                    <div className="flex justify-between items-end">
-                        <div>
-                            <h1 className="text-3xl md:text-4xl font-bold text-purple-900 mb-1">{greeting}</h1>
-                            <p className="text-purple-500 font-medium">Berikut ringkasan aktivitas akademik {userRole === 'dosen' ? 'bimbingan Anda' : 'hari ini'}.</p>
-                        </div>
-                        <div className="hidden md:block text-right">
-                            <div className="text-2xl font-bold text-purple-800">{formatDateId(new Date())}</div>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                        <StatCard title="Total Mahasiswa" value={stats.totalMhs} colorClass="text-purple-700" iconClass="text-purple-500" delay="0ms"/>
-                        {/* New Alumni Card */}
-                        <StatCard title="Total Alumni" value={stats.totalLulusan} colorClass="text-blue-600" iconClass="text-blue-500" delay="50ms"/>
-                        <StatCard title="Data Dosen" value={stats.totalDosen} colorClass="text-indigo-600" iconClass="text-indigo-500" delay="100ms"/>
-                        <StatCard title="Belum Proposal" value={stats.belumProposal} colorClass="text-emerald-500" iconClass="text-emerald-500" delay="200ms"/>
-                        <StatCard title="Sudah Proposal" value={stats.sempro} colorClass="text-orange-500" iconClass="text-orange-500" delay="300ms"/>
-                        <StatCard title="Sudah Hasil" value={stats.semhas} colorClass="text-pink-500" iconClass="text-pink-500" delay="400ms"/>
-                        <StatCard title="Sudah Sidang" value={stats.sidang} colorClass="text-rose-600" iconClass="text-rose-500" delay="500ms"/>
-                    </div>
-
-                    <div className="grid md:grid-cols-3 gap-6 md:gap-8">
-                        <div className="md:col-span-2 glass p-6 md:p-8 rounded-3xl shadow-xl border border-white/60">
-                            <h3 className="font-bold text-lg text-purple-900 mb-6 flex items-center gap-3">
-                                <span className="p-2 bg-purple-100 text-purple-600 rounded-lg"><Icon path={PATHS.Chart}/></span>    
-                                Beban Bimbingan Dosen (Global)
-                            </h3>
-                            <WorkloadChart dosenData={allDosen} />
-                        </div>
-
-                        <div className="bg-gradient-to-b from-slate-800 to-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col h-96">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500 opacity-20 rounded-full blur-3xl -mr-20 -mt-20"></div>
-                            <h3 className="font-bold text-lg mb-6 flex items-center gap-3 relative z-10">
-                                <span className="p-2 bg-white/10 rounded-lg"><Icon path={PATHS.Book}/></span>
-                                Jadwal Terdekat
-                            </h3>
-                            <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar relative z-10">
-                                {dashboardJadwal.slice(0, 5).map((j, i) => (
-                                    <div key={i} className="bg-white/5 backdrop-blur-sm p-3 rounded-xl border border-white/10 hover:bg-white/10 transition group">
-                                            <div className="flex justify-between items-start mb-1">
-                                                <div className="font-bold text-sm text-yellow-300 group-hover:text-yellow-200 transition">{j.Mahasiswa}</div>
-                                                <span className="text-[10px] bg-purple-600 px-2 py-0.5 rounded text-white">{j.Jenis.split(' ')[1] || j.Jenis}</span>
-                                            </div>
-                                            <div className="text-xs text-slate-300 flex flex-wrap gap-x-3 gap-y-1 mt-2">
-                                                 <span className="flex items-center gap-1 text-pink-300 font-medium">
-                                                    <Icon path={PATHS.FileText} size={12}/>    
-                                                    {formatDateId(j.Tanggal)}
-                                                 </span>
-                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {j.Jam}</span>
-                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Home} size={12}/> {j.Ruang}</span>
-                                            </div>
-                                    </div>
-                                ))}
-                                {dashboardJadwal.length === 0 && <p className="text-sm text-slate-400 text-center py-10">Belum ada jadwal {userRole === 'dosen' ? 'untuk mahasiswa Anda' : ''}.</p>}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
         const App = () => {
             const [page, setPage] = useState('dashboard');
             const [userRole, setUserRole] = useState(null);  
@@ -1850,6 +1854,61 @@
                 setCurrentUser(userData);
                 setShowLogin(false);
                 setPage('dashboard'); 
+                if (role === 'mahasiswa') {
+                    setPage('bimbingan'); // Redirect mahasiswa ke bimbingan, bukan dashboard
+                }
+                
+                // Trigger notification logic after login
+                setTimeout(() => {
+                    const latestInfo = db['Informasi'] && db['Informasi'].length > 0 ? db['Informasi'][db['Informasi'].length - 1] : null;
+                    const latestJadwal = db['Jadwal Ujian TA'] && db['Jadwal Ujian TA'].length > 0 ? db['Jadwal Ujian TA'][db['Jadwal Ujian TA'].length - 1] : null;
+                    const latestChat = db['BimbinganChats'] ? db['BimbinganChats'].filter(c => c.receiver === (userData ? userData.Nama : '')).pop() : null;
+
+                    let notifContent = null;
+
+                    if (role === 'mahasiswa' && userData) {
+                        if (latestChat) {
+                            notifContent = {
+                                type: 'Pesan Bimbingan Baru',
+                                title: `Dari: ${latestChat.sender}`,
+                                message: latestChat.message.length > 50 ? latestChat.message.substring(0,50) + '...' : latestChat.message
+                            };
+                        } else if (latestJadwal) {
+                             notifContent = {
+                                type: 'Jadwal Terbaru',
+                                title: `Ujian ${latestJadwal.Jenis}`,
+                                message: `${latestJadwal.Mahasiswa} akan ujian pada ${formatDateId(latestJadwal.Tanggal)} di ${latestJadwal.Ruang}. Semangat!`
+                            };
+                        } else if (latestInfo) {
+                            notifContent = {
+                                type: 'Info Akademik',
+                                title: latestInfo.Judul,
+                                message: latestInfo.Isi.length > 80 ? latestInfo.Isi.substring(0, 80) + '...' : latestInfo.Isi
+                            };
+                        }
+                    } else {
+                        if (latestChat) {
+                            notifContent = {
+                                type: 'Pesan Bimbingan Baru',
+                                title: `Dari: ${latestChat.sender}`,
+                                message: latestChat.message.length > 50 ? latestChat.message.substring(0,50) + '...' : latestChat.message
+                            };
+                        } else if (latestInfo) {
+                            notifContent = {
+                                type: 'Pengumuman Baru',
+                                title: latestInfo.Judul,
+                                message: latestInfo.Isi.length > 80 ? latestInfo.Isi.substring(0, 80) + '...' : latestInfo.Isi
+                            };
+                        }
+                    }
+
+                    if (notifContent) {
+                        setNotification({
+                            user: userData ? userData.Nama : (role === 'admin' ? 'Admin' : role === 'tendik' ? 'Staf Akademik' : 'Bapak/Ibu'),
+                            ...notifContent
+                        });
+                    }
+                }, 1000);
             };
 
             const NavItem = ({ name, icon, label, onClick, isActive, badge }) => (
@@ -1888,7 +1947,7 @@
                             <div className="font-extrabold text-2xl text-white tracking-tight leading-none">SI TA <span className="text-purple-400">FIKPsi</span></div>
                         </div>
                         <nav className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar space-y-1">
-                            <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>
+                            {userRole !== 'mahasiswa' && <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>}
                             {(userRole === 'admin') && <NavItem name="dosen" icon={PATHS.User} label="Data Dosen" onClick={()=>{setPage('dosen'); setMenuOpen(false)}} isActive={page==='dosen'}/>}
                             {(userRole === 'admin') && <NavItem name="mahasiswa" icon={PATHS.Users} label="Data Mahasiswa" onClick={()=>{setPage('mahasiswa'); setMenuOpen(false)}} isActive={page==='mahasiswa'}/>}
                             {userRole === 'mahasiswa' && <NavItem name="progres" icon={PATHS.Chart} label="Lapor Progres" onClick={()=>{setPage('progres'); setMenuOpen(false)}} isActive={page==='progres'}/>}
@@ -1928,6 +1987,15 @@
                             )}
                         </nav>
                         <div className="p-6 bg-black/20 mx-4 mb-4 rounded-2xl border border-white/5">
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-xs font-bold">
+                                    {userRole.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div className="text-white text-sm font-bold capitalize">{currentUser ? currentUser.Nama : userRole}</div>
+                                    <div className="text-purple-400 text-[10px]">{userRole}</div>
+                                </div>
+                            </div>
                             <button onClick={()=>{setShowLogin(true); setMenuOpen(false)}} className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-bold text-white transition flex items-center justify-center gap-2"><Icon path={PATHS.Logout} size={14}/> Keluar</button>
                         </div>
                     </div>
@@ -1943,7 +2011,7 @@
                     </div>
 
                     <main className="flex-1 md:ml-72 p-4 md:p-8 pt-24 md:pt-10 h-screen overflow-y-auto touch-scroll">
-                        {page === 'dashboard' && <Dashboard db={db} userRole={userRole} currentUser={currentUser}/>}
+                        {page === 'dashboard' && userRole !== 'mahasiswa' && <Dashboard db={db} userRole={userRole} currentUser={currentUser}/>}
                         {page === 'mahasiswa' && <GenericTable key="tbl-mhs" title="Data Mahasiswa & TA" data={db['Mahasiswa Tugas Akhir']} columns={TABLE_CONFIG['Mahasiswa Tugas Akhir'].columns} formConfig={TABLE_CONFIG['Mahasiswa Tugas Akhir'].form} onAdd={(d) => add('Mahasiswa Tugas Akhir', d)} onDel={(id) => del('Mahasiswa Tugas Akhir', id)} onUpdate={(id, d) => update('Mahasiswa Tugas Akhir', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
                         {page === 'dosen' && <GenericTable key="tbl-dosen" title="Data Dosen" data={db['Data Dosen']} columns={TABLE_CONFIG['Data Dosen'].columns} formConfig={TABLE_CONFIG['Data Dosen'].form} onAdd={d=>add('Data Dosen',d)} onDel={id=>del('Data Dosen',id)} onUpdate={(id, d)=>update('Data Dosen', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
                         {page === 'progres' && userRole === 'mahasiswa' && <StudentProgress db={db} currentUser={currentUser} onUpdate={(col, id, data) => update(col, id, data)} />}
