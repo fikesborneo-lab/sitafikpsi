@@ -1862,7 +1862,45 @@
 
             const { db, add, del, update, isOnline, refresh, importBatch, batchUpdate, isLoading, isBackgroundSyncing, lastSyncTime, save } = useDatabase(INITIAL_DB, config.scriptUrl);
 
-            const handleRoleLogin = (role, userData = null) => {
+            
+            // Sinkronisasi otomatis link GForm dari config lokal ke tabel Konfigurasi
+            useEffect(() => {
+                try {
+                    const konfigurasiList = (db && db['Konfigurasi']) || [];
+                    if (!konfigurasiList.length || typeof update !== 'function') return;
+                    const konf = konfigurasiList[0];
+                    if (!konf || konf.id == null) return;
+
+                    const gformKeys = [
+                        'gform_pengajuan_judul',
+                        'gform_sempro',
+                        'gform_semhas',
+                        'gform_sidang',
+                        'gform_laporan_ta',
+                        'gform_surat',
+                        'gform_yudisium',
+                    ];
+
+                    const patch = {};
+                    let needsUpdate = false;
+
+                    gformKeys.forEach(key => {
+                        const fromConfig = config && config[key];
+                        const fromDb = konf[key];
+                        if (fromConfig && !fromDb) {
+                            patch[key] = fromConfig;
+                            needsUpdate = true;
+                        }
+                    });
+
+                    if (needsUpdate) {
+                        update('Konfigurasi', konf.id, patch);
+                    }
+                } catch (e) {
+                    console.error('GForm sync error', e);
+                }
+            }, [db, config, update]);
+const handleRoleLogin = (role, userData = null) => {
                 setUserRole(role);
                 setCurrentUser(userData);
                 setShowLogin(false);
