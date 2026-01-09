@@ -1256,7 +1256,7 @@
             );
         };
 
-        const AdministrasiMenu = ({ setPage, config, setConfig, userRole }) => {
+        const AdministrasiMenu = ({ setPage, config, setConfig, userRole, db, update }) => {
             const [editingId, setEditingId] = useState(null);
             const [tempLink, setTempLink] = useState('');
 
@@ -1282,7 +1282,18 @@
             };
 
             const handleSaveLink = (id, configKey) => {
-                setConfig(prev => ({ ...prev, [configKey]: tempLink }));
+                const newLink = (tempLink || '').trim();
+                setConfig(prev => ({ ...prev, [configKey]: newLink }));
+
+                // Simpan juga ke Konfigurasi di database agar terbaca oleh semua pengguna
+                const konfigurasiList = (db && db['Konfigurasi']) || [];
+                if (konfigurasiList.length > 0 && typeof update === 'function') {
+                    const konf = konfigurasiList[0];
+                    if (konf && konf.id != null) {
+                        update('Konfigurasi', konf.id, { [configKey]: newLink });
+                    }
+                }
+
                 setEditingId(null);
             };
 
@@ -1298,7 +1309,9 @@
                             const configKey = item.id === 'daftar_sidang' ? 'gform_sidang' : `gform_${item.id}`;
                             // Peminatan usually doesn't have a gform, exclude it from link logic if needed, or keep it generic
                             const hasGformSupport = item.id !== 'peminatan'; 
-                            const gformUrl = config[configKey];
+                            const konfigurasiList = (db && db['Konfigurasi']) || [];
+                            const konfigurasi = konfigurasiList[0] || {};
+                            const gformUrl = (config && config[configKey]) || konfigurasi[configKey] || '';
 
                             return (
                                 <div key={item.id} className="relative group h-full" style={{animationDelay: `${idx * 100}ms`}}>
@@ -2124,7 +2137,7 @@
                             allowEdit={userRole==='admin' || userRole==='dosen' || userRole==='tendik'}
                         />}
 
-                        {page === 'administrasi' && <AdministrasiMenu setPage={setPage} config={config} setConfig={setConfig} userRole={userRole} />}
+                        {page === 'administrasi' && <AdministrasiMenu setPage={setPage} config={config} setConfig={setConfig} userRole={userRole} db={db} update={update} />}
                         
                         {['pengajuan_judul','sempro','semhas','daftar_sidang','laporan_ta','surat','yudisium','peminatan'].includes(page) && (
                             (() => {
