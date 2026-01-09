@@ -1268,6 +1268,7 @@
                 { id: 'laporan_ta', label: 'Laporan Tugas Akhir', icon: PATHS.FileText, color: 'bg-cyan-100 text-cyan-600', desc: 'Upload laporan progres TA' },  
                 { id: 'surat', label: 'Layanan Surat', icon: PATHS.Mail, color: 'bg-orange-100 text-orange-600', desc: 'Buat surat ijin riset dll' },
                 { id: 'yudisium', label: 'Pendaftaran Yudisium', icon: PATHS.Tag, color: 'bg-yellow-100 text-yellow-600', desc: 'Daftar yudisium kelulusan' },
+                                { id: 'pendaftaran_ta', label: 'Pendaftaran Tugas Akhir', icon: PATHS.Graduation, color: 'bg-indigo-100 text-indigo-600', desc: 'Daftar Tugas Akhir via GForm' },
                 { id: 'peminatan', label: 'Data Peminatan', icon: PATHS.Cog, color: 'bg-slate-100 text-slate-600', desc: 'Kelola data peminatan' },
             ];
 
@@ -1311,14 +1312,23 @@
                             const hasGformSupport = item.id !== 'peminatan'; 
                             const konfigurasiList = (db && db['Konfigurasi']) || [];
                             const konfigurasi = konfigurasiList[0] || {};
-                            const gformUrl = (config && config[configKey]) || konfigurasi[configKey] || '';
+                            let gformUrl = (config && config[configKey]) || konfigurasi[configKey] || '';
+                            if (item.id === 'pendaftaran_ta' && !gformUrl) {
+                                gformUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf377BNEuWY0zxR5npjDAalUe3RGk737KuV0XeLzdQ5jB1Gjg/viewform';
+                            }
 
                             return (
                                 <div key={item.id} className="relative group h-full" style={{animationDelay: `${idx * 100}ms`}}>
                                     <div className="glass p-6 rounded-3xl border border-white/60 shadow-lg hover:shadow-purple-500/20 transition duration-300 flex flex-col h-full relative overflow-hidden">
                                              
                                             <button 
-                                                onClick={() => setPage(item.id)}
+                                                onClick={() => {
+                                                if (item.id === 'pendaftaran_ta' && gformUrl) {
+                                                    window.open(gformUrl, '_blank');
+                                                } else {
+                                                    setPage(item.id);
+                                                }
+                                            }}
                                                 className="flex items-center gap-6 text-left flex-1 outline-none w-full"
                                             >
                                                 <div className={`absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4 scale-150 group-hover:scale-175 transition duration-500 pointer-events-none`}>
