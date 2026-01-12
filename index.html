@@ -1259,7 +1259,7 @@
                                     <div key={chat.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-fade-in`}>
                                             <div className={`max-w-[85%] md:max-w-[70%] flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                                                 <div className={`p-3.5 rounded-2xl text-sm leading-relaxed shadow-sm ${isMe ? 'bg-purple-600 text-white rounded-br-none' : 'bg-white border border-purple-100 text-gray-700 rounded-bl-none'}`}>
-                                                    <p>{chat.message}</p>
+                                                    <p>{chat.message || chat.text}</p>
                                                 </div>
                                                 <span className="text-[10px] text-gray-400 mt-1 px-1 flex items-center gap-1">
                                                     {formatDateId(chat.timestamp, true)}
@@ -1389,8 +1389,9 @@
             const progressData = useMemo(() => {
                 const stages = ['Belum Proposal', 'Sudah Proposal', 'Sudah Hasil', 'Sudah Sidang', 'Lulus'];
                 let currentStatus = 'Belum Proposal';
-                if(userRole === 'mahasiswa') currentStatus = currentUser.Status;
-                
+                if (userRole === 'mahasiswa' && currentUser && currentUser.Status) {
+                    currentStatus = currentUser.Status;
+                }
                 const currentIdx = stages.indexOf(currentStatus);
                 return stages.map((stage, idx) => ({
                     chapter: stage,
@@ -1398,6 +1399,51 @@
                     progress: idx < currentIdx ? 100 : (idx === currentIdx ? 50 : 0)
                 }));
             }, [currentUser, userRole]);
+
+            const bimbinganSummary = useMemo(() => {
+                if (userRole !== 'dosen' || !currentUser || !currentUser.Nama) return [];
+                const allChats = db['BimbinganChats'] || [];
+                const myName = currentUser.Nama;
+                const summaryMap = new Map();
+
+                allChats.forEach(msg => {
+                    if (!msg || !msg.sender || !msg.receiver) return;
+                    if (msg.sender !== myName && msg.receiver !== myName) return;
+
+                    const other = msg.sender === myName ? msg.receiver : msg.sender;
+                    if (!other) return;
+
+                    const key = other;
+                    const existing = summaryMap.get(key) || {
+                        mahasiswa: other,
+                        lastMessageAt: null,
+                        lastSender: null,
+                        unread: 0
+                    };
+
+                    let ts = null;
+                    try {
+                        ts = msg.timestamp ? new Date(msg.timestamp).getTime() : null;
+                    } catch (e) {
+                        ts = null;
+                    }
+                    if (ts && (!existing.lastMessageAt || ts > existing.lastMessageAt)) {
+                        existing.lastMessageAt = ts;
+                        existing.lastSender = msg.sender;
+                    }
+
+                    if (msg.receiver === myName && !msg.is_read) {
+                        existing.unread += 1;
+                    }
+
+                    summaryMap.set(key, existing);
+                });
+
+                return Array.from(summaryMap.values()).sort(
+                    (a, b) => (b.lastMessageAt || 0) - (a.lastMessageAt || 0)
+                );
+            }, [db, userRole, currentUser]);
+
 
             return (
                 <div className="space-y-6 pb-20 animate-fade-in">
@@ -1455,13 +1501,59 @@
                         </div>
                     )}
 
-                    {activeTab === 'chat' && (
+                    
+                        {userRole === 'dosen' && (
+                            <div className="mt-6 glass p-6 rounded-3xl border border-white/60 shadow-lg">
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 className="font-bold text-purple-900">Ringkasan Bimbingan Mahasiswa</h3>
+                                        <p className="text-xs text-gray-500">
+                                            Daftar mahasiswa dengan riwayat chat dan jumlah pesan yang belum dibalas.
+                                        </p>
+                                    </div>
+                                </div>
+                                {(!bimbinganSummary || bimbinganSummary.length === 0) ? (
+                                    <p className="text-xs text-gray-500">Belum ada percakapan bimbingan yang tercatat.</p>
+                                ) : (
+                                    <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                                        {bimbinganSummary.map(item => (
+                                            <div
+                                                key={item.mahasiswa}
+                                                className="flex items-center justify-between border-b border-slate-100 pb-2 last:border-b-0"
+                                            >
+                                                <div>
+                                                    <p className="text-sm font-semibold text-slate-800">
+                                                        {item.mahasiswa}
+                                                    </p>
+                                                    <p className="text-[11px] text-slate-500">
+                                                        Terakhir pesan oleh{' '}
+                                                        {item.lastSender === currentUser.Nama ? 'Anda' : item.lastSender || '-'}
+                                                        {item.lastMessageAt && (
+                                                            <>
+                                                                {' '}
+                                                                • {formatDateId(new Date(item.lastMessageAt))}
+                                                            </>
+                                                        )}
+                                                    </p>
+                                                </div>
+                                                {item.unread > 0 && (
+                                                    <span className="inline-flex items-center justify-center min-w-[1.75rem] px-2 py-0.5 rounded-full bg-red-500 text-[10px] font-bold text-white">
+                                                        {item.unread}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+{activeTab === 'chat' && (
                         <GuidanceRoom    
                             currentUser={currentUser}    
                             userRole={userRole}    
                             db={db}
                             chats={db['BimbinganChats'] || []}    
-                            onSend={(msg) => { add('BimbinganChats', { ...msg, timestamp: new Date().toISOString() }); }}    
+                            onSend={(msg) => { add('BimbinganChats', { ...msg, timestamp: new Date().toISOString(), is_read: false }); }}    
                         />
                     )}
 
@@ -1687,15 +1779,20 @@
             }, [globalMhs, rawDosen]);
 
             const dashboardJadwal = useMemo(() => {
+                if (userRole === 'mahasiswa' && currentUser?.Nama) {
+                    const myName = String(currentUser.Nama).trim();
+                    return globalJadwal.filter(j => String(j.Mahasiswa || '').trim() === myName);
+                }
+
                 if (userRole === 'dosen' && currentUser?.Nama) {
-                     const myName = String(currentUser.Nama).trim().toLowerCase();
-                     const myStudentNames = new Set(dashboardMhs.map(m => m.Nama));
+                    const myName = String(currentUser.Nama).trim().toLowerCase();
+                    const myStudentNames = new Set(dashboardMhs.map(m => m.Nama));
                      
-                     return globalJadwal.filter(j => {
-                         const isMyStudent = myStudentNames.has(j.Mahasiswa);
-                         const isMySchedule = String(j.Penguji_1 || '').trim().toLowerCase() === myName;
-                         return isMyStudent || isMySchedule;
-                     });
+                    return globalJadwal.filter(j => {
+                        const isMyStudent = myStudentNames.has(j.Mahasiswa);
+                        const isMySchedule = String(j.Penguji_1 || '').trim().toLowerCase() === myName;
+                        return isMyStudent || isMySchedule;
+                    });
                 }
                 return globalJadwal;
             }, [globalJadwal, dashboardMhs, userRole, currentUser]);
@@ -2104,402 +2201,209 @@
             );
         };
 
-        const ChatBot = ({ db, currentUser, userRole, isOpen, onToggle }) => {
+        
+        
+        const ChatBot = ({ db, currentUser, userRole, isOpen, onToggle, add, update }) => {
             const [input, setInput] = useState('');
-            const [messages, setMessages] = useState([
-                { id: 1, text: "Halo! Ada yang bisa saya bantu?", sender: 'bot' }
-            ]);
-            const [isTyping, setIsTyping] = useState(false);
             const chatEndRef = useRef(null);
+
+            // Hanya tampil untuk mahasiswa yang sudah login
+            if (!currentUser || userRole !== 'mahasiswa') {
+                return null;
+            }
+
+            const advisorName = currentUser.Pembimbing_1 || currentUser.Pembimbing_2 || currentUser.Pembimbing || '';
+
+            const allChats = db['BimbinganChats'] || [];
+
+            const chats = allChats.filter(msg => {
+                if (!advisorName || !msg) return false;
+                return (
+                    (msg.sender === currentUser.Nama && msg.receiver === advisorName) ||
+                    (msg.sender === advisorName && msg.receiver === currentUser.Nama)
+                );
+            });
+
+            const unreadCount = allChats.filter(msg => {
+                if (!msg || !advisorName) return false;
+                return (
+                    msg.receiver === currentUser.Nama &&
+                    msg.sender === advisorName &&
+                    !msg.is_read
+                );
+            }).length;
 
             useEffect(() => {
                 if (chatEndRef.current) {
                     chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
                 }
-            }, [messages, isOpen]);
+            }, [chats, isOpen]);
 
-            const quickActions = useMemo(() => {
-                if (userRole === 'mahasiswa') {
-                    return [
-                        { label: "Cek Jadwal Saya", query: "jadwal saya", icon: PATHS.Sun },
-                        { label: "Siapa Pembimbing?", query: "pembimbing saya", icon: PATHS.User },
-                        { label: "Judul Tugas Akhir", query: "judul tugas akhir", icon: PATHS.FileText },
-                        { label: "Bantuan", query: "bantuan", icon: PATHS.Info },
-                    ];
-                } else if (userRole === 'dosen') {
-                    return [
-                        { label: "Data Bimbingan", query: "data bimbingan saya", icon: PATHS.Users },
-                        { label: "Cek Jadwal", query: "jadwal ujian", icon: PATHS.Sun },
-                        { label: "Beban Kerja", query: "beban kerja", icon: PATHS.Chart },
-                        { label: "Pusat Bantuan", query: "bantuan", icon: PATHS.Info },
-                    ];
-                }
-                return [];
-            }, [userRole]);
+            // Saat panel dibuka, tandai pesan dari pembimbing sebagai "dibaca"
+            useEffect(() => {
+                if (!isOpen || !advisorName || !currentUser?.Nama || typeof update !== 'function') return;
 
-            const generateBotResponse = (query, db, currentUser) => {
-                const q = (query || '').toLowerCase();
-                const database = db || {};
+                try {
+                    const myName = currentUser.Nama;
+                    const toMark = (db['BimbinganChats'] || []).filter(msg =>
+                        msg &&
+                        msg.receiver === myName &&
+                        msg.sender === advisorName &&
+                        !msg.is_read
+                    );
 
-                // 1. Cek knowledge base khusus chatbot (bisa diatur dari menu admin)
-                const knowledgeBase = database['ChatbotKnowledgeBase'] || [];
-                const kbMatch = knowledgeBase.find(item => {
-                    const keywords = item.keywords ? String(item.keywords).toLowerCase().split(',') : [];
-                    return keywords.some(k => k.trim() && q.includes(k.trim()));
-                });
-                if (kbMatch) {
-                    return kbMatch.answer;
-                }
-
-                // 2. Tampilkan daftar menu utama aplikasi
-                if (q.includes('menu') && (q.includes('apa saja') || q.includes('tampilkan') || q.includes('lihat'))) {
-                    return [
-                        'Menu utama yang tersedia di aplikasi ini:',
-                        '- Dashboard',
-                        '- Bimbingan',
-                        '- Tugas Akhir Mahasiswa',
-                        '- Informasi',
-                        '- Sidang / Jadwal Ujian',
-                        '- Administrasi Akademik',
-                        '- Unduhan Dokumen',
-                        '',
-                        'Anda juga bisa ketik:',
-                        '- "tabel apa saja di database" untuk melihat tabel data',
-                        '- "cari rina wati" untuk mencari data di seluruh database.'
-                    ].join('\n');
-                }
-
-                // 3. Tampilkan semua tabel di database
-                const tableNames = Object.keys(database);
-                if (tableNames.length > 0 && (
-                    q.includes('tabel apa saja') ||
-                    q.includes('list tabel') ||
-                    q.includes('semua tabel') ||
-                    (q.includes('database') && q.includes('apa saja'))
-                )) {
-                    const lines = tableNames.map(name => {
-                        const rows = Array.isArray(database[name]) ? database[name].length : 0;
-                        return `- ${name} (${rows} data)`;
-                    });
-                    return 'Tabel yang ada di database saat ini:\n' + lines.join('\n');
-                }
-
-                // 4. Logika khusus MAHASISWA (jadwal, pembimbing, judul)
-                if (userRole === 'mahasiswa' && currentUser) {
-                    if (q.includes('jadwal saya') || q.includes('kapan ujian')) {
-                        const mySchedule = (database['Jadwal Ujian TA'] || []).filter(j => j.Mahasiswa === currentUser.Nama);
-                        if (mySchedule.length > 0) {
-                            const list = mySchedule.map(j => {
-                                const tgl = j.Tanggal ? formatDateId(j.Tanggal) : '-';
-                                return `- ${j.Jenis} tgl ${tgl} jam ${j.Jam || '-'} di ${j.Ruang || '-'}`;
-                            }).join('\n');
-                            return `Jadwal Anda:\n${list}`;
-                        }
-                        return 'Saya tidak menemukan jadwal ujian untuk nama Anda saat ini.';
-                    }
-
-                    if (q.includes('pembimbing') || q.includes('dosen saya')) {
-                        const p1 = currentUser.Pembimbing_1;
-                        const p2 = currentUser.Pembimbing_2;
-                        if (p1 && p2) return `Pembimbing Anda adalah ${p1} (Pembimbing 1) dan ${p2} (Pembimbing 2).`;
-                        if (p1) return `Pembimbing Anda adalah ${p1}.`;
-                        return 'Data pembimbing belum tersedia.';
-                    }
-
-                    if (q.includes('judul') || q.includes('topik')) {
-                        return `Judul TA Anda saat ini: "${currentUser.Judul || '-'}"`;
-                    }
-
-                    if (q.includes('penguji saya') || (q.includes('penguji') && !q.includes('siapa'))) {
-                        const jadwal = (database['Jadwal Ujian TA'] || []).filter(j => 
-                            String(j.Mahasiswa || '').toLowerCase() === String(currentUser.Nama || '').toLowerCase()
-                        );
-                        if (jadwal.length > 0) {
-                            const pengujiList = [];
-                            jadwal.forEach(j => {
-                                Object.keys(j).forEach(k => {
-                                    if (k.toLowerCase().startsWith('penguji') && j[k]) {
-                                        if (!pengujiList.includes(j[k])) pengujiList.push(j[k]);
-                                    }
-                                });
+                    toMark.forEach(msg => {
+                        try {
+                            update('BimbinganChats', msg.id, {
+                                ...msg,
+                                is_read: true,
+                                read_at: new Date().toISOString()
                             });
-                            if (pengujiList.length > 0) {
-                                return 'Penguji Anda yang tercatat di sistem:\n- ' + pengujiList.join('\n- ');
-                            }
+                        } catch (e) {
+                            // fail silently agar UI tidak crash
                         }
-                        return 'Data penguji untuk Anda belum ditemukan di jadwal ujian.';
-                    }
-                }
-
-                // 5. Logika khusus DOSEN (data bimbingan, beban kerja, mahasiswa yang diuji)
-                if (userRole === 'dosen' && currentUser) {
-                    if (q.includes('data bimbingan')) {
-                        const myStudents = (database['Mahasiswa Tugas Akhir'] || []).filter(m => {
-                            const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                            const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                            const myName = String(currentUser.Nama || '').trim().toLowerCase();
-                            return p1 === myName || p2 === myName;
-                        });
-
-                        if (myStudents.length > 0) {
-                            const list = myStudents.map(m => `- ${m.Nama} (${m.NPM}) - ${m.Status || 'Status belum diisi'}`).join('\n');
-                            return `Daftar ${myStudents.length} mahasiswa bimbingan Anda:\n${list}`;
-                        }
-                        return 'Anda belum memiliki data mahasiswa bimbingan.';
-                    }
-
-                    if (q.includes('beban kerja')) {
-                        const total = (database['Mahasiswa Tugas Akhir'] || []).filter(m => {
-                            const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
-                            const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
-                            const myName = String(currentUser.Nama || '').trim().toLowerCase();
-                            return p1 === myName || p2 === myName;
-                        }).length;
-                        return `Total beban kerja bimbingan Anda saat ini adalah ${total} mahasiswa.`;
-                    }
-
-                    if (q.includes('mahasiswa yang saya uji') || (q.includes('sebagai penguji') && !q.includes('bimbing'))) {
-                        const jadwal = database['Jadwal Ujian TA'] || [];
-                        const myName = String(currentUser.Nama || '').trim().toLowerCase();
-                        const list = jadwal.filter(j => {
-                            return Object.keys(j || {}).some(k => 
-                                k.toLowerCase().startsWith('penguji') &&
-                                String(j[k] || '').trim().toLowerCase() === myName
-                            );
-                        });
-                        if (list.length > 0) {
-                            const rows = list.map(j => {
-                                const tgl = j.Tanggal ? formatDateId(j.Tanggal) : '-';
-                                return `- ${j.Mahasiswa} (${j.Jenis}) tgl ${tgl}`;
-                            }).join('\n');
-                            return `Mahasiswa yang Anda uji berdasarkan jadwal ujian:\n${rows}`;
-                        }
-                        return 'Belum ada jadwal ujian yang mencatat Anda sebagai penguji.';
-                    }
-                }
-
-                // 6. Pertanyaan spesifik tentang PENGUJI untuk nama mahasiswa tertentu
-                if (q.includes('penguji')) {
-                    let namaMhs = q;
-                    ['siapa', 'nama', 'penguji', 'untuk', 'mahasiswa', 'si', 'yg', 'yang'].forEach(st => {
-                        namaMhs = namaMhs.replace(st, '');
                     });
-                    namaMhs = namaMhs.trim();
-                    
-                    const jadwal = database['Jadwal Ujian TA'] || [];
-                    if (namaMhs && jadwal.length > 0) {
-                        const matches = jadwal.filter(j => 
-                            String(j.Mahasiswa || '').toLowerCase().includes(namaMhs)
-                        );
-                        if (matches.length > 0) {
-                            const rows = matches.map(j => {
-                                const penguji = Object.keys(j || {})
-                                    .filter(k => k.toLowerCase().startsWith('penguji') && j[k])
-                                    .map(k => j[k])
-                                    .join(', ') || '-';
-                                const tgl = j.Tanggal ? formatDateId(j.Tanggal) : '-';
-                                return `- ${j.Mahasiswa} (${j.Jenis}) tgl ${tgl} • Penguji: ${penguji}`;
-                            }).join('\n');
-                            return `Data penguji yang saya temukan:\n${rows}`;
-                        }
-                        return `Saya tidak menemukan data penguji untuk mahasiswa bernama "${namaMhs}".`;
-                    }
+                } catch (e) {
+                    // abaikan error tak terduga
                 }
+            }, [isOpen, advisorName, currentUser, db, update]);
 
-                // 7. Pencarian generik di seluruh database dengan kata kunci "cari ..."
-                if (q.includes('cari ')) {
-                    let keyword = q;
-                    keyword = keyword.replace('cari data', '').replace('cari', '').trim();
-                    if (keyword.length < 2) {
-                        return 'Tuliskan kata kunci yang lebih spesifik, misalnya: "cari Rina" atau "cari Budi penguji".';
-                    }
-
-                    const results = [];
-                    tableNames.forEach(table => {
-                        const rows = Array.isArray(database[table]) ? database[table] : [];
-                        rows.forEach(row => {
-                            const textRow = JSON.stringify(row || {}).toLowerCase();
-                            if (textRow.includes(keyword)) {
-                                results.push({ table, row });
-                            }
-                        });
-                    });
-
-                    if (results.length === 0) {
-                        return `Saya tidak menemukan data yang mengandung "${keyword}" di database.`;
-                    }
-
-                    const limited = results.slice(0, 10);
-                    const lines = limited.map(({ table, row }) => {
-                        const entries = Object.entries(row || {})
-                            .filter(([k]) => k !== 'id')
-                            .slice(0, 4)
-                            .map(([k, v]) => `${k}: ${v}`)
-                            .join(', ');
-                        return `- [${table}] ${entries}`;
-                    });
-                    if (results.length > limited.length) {
-                        lines.push(`... dan ${results.length - limited.length} data lain yang juga cocok.`);
-                    }
-
-                    return [
-                        `Saya mencari di seluruh database dan menemukan ${results.length} data yang relevan dengan "${keyword}":`,
-                        ...lines
-                    ].join('\n');
+            const formatTime = (ts) => {
+                try {
+                    return new Date(ts).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+                } catch (e) {
+                    return '';
                 }
-
-                // 8. Shortcut pencarian jika user hanya menulis nama (misal: "rina wati")
-                if (!q.includes(' ') && q.length > 3) {
-                    // satu kata biasanya terlalu umum, biarkan ke fallback
-                } else if (q.length > 3 && !q.includes('jadwal') && !q.includes('pembimbing') && !q.includes('penguji')) {
-                    const keyword = q.trim();
-                    const results = [];
-                    tableNames.forEach(table => {
-                        const rows = Array.isArray(database[table]) ? database[table] : [];
-                        rows.forEach(row => {
-                            const textRow = JSON.stringify(row || {}).toLowerCase();
-                            if (textRow.includes(keyword)) {
-                                results.push({ table, row });
-                            }
-                        });
-                    });
-                    if (results.length > 0) {
-                        const limited = results.slice(0, 5);
-                        const lines = limited.map(({ table, row }) => {
-                            const entries = Object.entries(row || {})
-                                .filter(([k]) => k !== 'id')
-                                .slice(0, 3)
-                                .map(([k, v]) => `${k}: ${v}`)
-                                .join(', ');
-                            return `- [${table}] ${entries}`;
-                        });
-                        return [
-                            `Saya mencoba mencari "${keyword}" di seluruh database dan menemukan ${results.length} data:`,
-                            ...lines
-                        ].join('\n');
-                    }
-                }
-
-                // 9. Jawaban umum
-                if (q.includes('halo') || q.includes('hai') || q.includes('assalamualaikum')) {
-                    return 'Halo! Saya FIKPsi Bot. Silakan tanya tentang jadwal, pembimbing, penguji, atau ketik "tabel apa saja di database".';
-                }
-                if (q.includes('terima kasih') || q.includes('makasih') || q.includes('thanks')) {
-                    return 'Sama-sama! Semoga dilancarkan tugas akhirnya 🙏';
-                }
-                if (q.includes('login') || q.includes('masuk')) {
-                    return 'Untuk login, gunakan NPM (Mahasiswa) atau NIDN (Dosen/Tendik). Password default sama dengan ID. Jika lupa, hubungi admin.';
-                }
-
-                return 'Maaf, saya belum paham pertanyaan Anda. Coba gunakan kata kunci seperti: "jadwal saya", "pembimbing saya", "penguji saya", "tabel apa saja di database", atau "cari [kata]".';
             };
+
             const handleSend = (e) => {
                 e.preventDefault();
-                if (!input.trim()) return;
+                const textMsg = (input || '').trim();
+                if (!textMsg) return;
 
-                const userMsg = { id: Date.now(), text: input, sender: 'user' };
-                setMessages(prev => [...prev, userMsg]);
+                if (!advisorName) {
+                    alert('Data pembimbing utama belum diisi di profil mahasiswa.');
+                    return;
+                }
+
+                add('BimbinganChats', {
+                    id: Date.now(),
+                    sender: currentUser.Nama,
+                    receiver: advisorName,
+                    message: textMsg,
+                    type: 'text',
+                    timestamp: new Date().toISOString(),
+                    is_read: false
+                });
+
                 setInput('');
-                setIsTyping(true);
-
-                setTimeout(() => {
-                    const botResponseText = generateBotResponse(userMsg.text, db, currentUser);
-                    const botMsg = { id: Date.now() + 1, text: botResponseText, sender: 'bot' };
-                    setMessages(prev => [...prev, botMsg]);
-                    setIsTyping(false);
-                }, 1000);
             };
+
+            const hasAdvisor = Boolean(advisorName && advisorName.trim());
 
             return (
                 <>
-                    {!isOpen && (
-                        <button 
-                            onClick={onToggle}
-                            className="fixed bottom-6 right-6 w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-2xl shadow-purple-500/40 flex items-center justify-center text-white z-50 hover:scale-110 transition transform animate-bounce-slight"
-                            title="Buka Chat"
-                        >
-                            <Icon path={PATHS.MessageCircle} size={32} />
-                        </button>
-                    )}
+                    {/* Tombol floating pembuka ruang bimbingan */}
+                    <button
+                        onClick={onToggle}
+                        className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full shadow-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold focus:outline-none focus:ring focus:ring-purple-300"
+                    >
+                        <div className="relative flex items-center gap-2">
+                            <Icon path={PATHS.MessageSquare} size={18} />
+                            <span className="hidden md:inline">Bimbingan TA</span>
+                            {unreadCount > 0 && (
+                                <span className="absolute -top-1 -right-1 inline-flex h-3 w-3 rounded-full bg-red-500 ring-2 ring-white"></span>
+                            )}
+                        </div>
+                    </button>
 
+                    {/* Panel chat bimbingan tugas akhir */}
                     {isOpen && (
-                        <div className="fixed bottom-6 right-6 md:right-6 w-[calc(100%-2rem)] md:w-96 h-[500px] bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 z-50 flex flex-col animate-slide-up overflow-hidden">
-                            
-                            <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-4 flex items-center justify-between text-white shadow-lg">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative">
-                                        <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                                            <Icon path={PATHS.Robot} size={20}/>
-                                        </div>
-                                        <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-purple-600 animate-pulse"></div>
-                                    </div>
-                                    <div>
-                                        <h3 className="font-bold text-sm">FIKPsi Bot</h3>
-                                        <p className="text-[10px] text-white/70">Online • Otomatis</p>
-                                    </div>
+                        <div className="fixed bottom-24 right-6 w-80 md:w-96 max-h-[70vh] bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-700/80 flex flex-col overflow-hidden z-40">
+                            <div className="px-4 py-3 border-b border-slate-200/70 dark:border-slate-700/70 flex items-center justify-between bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+                                <div>
+                                    <h3 className="text-sm font-semibold">Ruang Bimbingan Tugas Akhir</h3>
+                                    <p className="text-[11px] opacity-80">
+                                        {hasAdvisor
+                                            ? `Terhubung dengan: ${advisorName}`
+                                            : 'Lengkapi dulu data pembimbing di profil Anda.'}
+                                    </p>
                                 </div>
-                                <button onClick={onToggle} className="p-1 hover:bg-white/20 rounded-full transition">
-                                    <Icon path={PATHS.Minimize2} size={20} />
+                                <button
+                                    onClick={onToggle}
+                                    className="p-1 rounded-full hover:bg-white/15 focus:outline-none"
+                                    title="Tutup"
+                                >
+                                    <Icon path={PATHS.X} size={16} />
                                 </button>
                             </div>
 
-                            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-purple-50/30 custom-scrollbar">
-                                {messages.map((msg, index) => (
-                                    <div key={msg.id}>
-                                        <div className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                            <div className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${
-                                                msg.sender === 'user' 
-                                                    ? 'bg-gradient-to-br from-purple-600 to-pink-600 text-white rounded-br-none' 
-                                                    : 'bg-white text-gray-700 border border-purple-100 rounded-bl-none'
-                                            }`}>
-                                                <span className="whitespace-pre-wrap leading-relaxed">{msg.text}</span>
-                                            </div>
-                                        </div>
-                                        
-                                        {msg.sender === 'bot' && index === 0 && quickActions.length > 0 && (
-                                            <div className="flex flex-wrap gap-2 mt-3 animate-fade-in">
-                                                {quickActions.map((action, i) => (
-                                                    <button
-                                                        key={i}
-                                                        onClick={() => handleSend({ preventDefault: () => {}, target: { value: action.query } })}
-                                                        className="px-3 py-1.5 bg-white border border-purple-200 text-purple-700 rounded-full text-xs font-bold shadow-sm hover:bg-purple-50 hover:border-purple-400 transition flex items-center gap-2"
-                                                    >
-                                                        <Icon path={action.icon} size={12} />
-                                                        {action.label}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                {isTyping && (
-                                    <div className="flex justify-start">
-                                        <div className="bg-white border border-purple-100 p-3 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-1">
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                            <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot"></div>
-                                        </div>
+                            <div className="flex-1 overflow-y-auto p-3 space-y-2 bg-slate-50/70 dark:bg-slate-900/40">
+                                {(!hasAdvisor) && (
+                                    <div className="text-[12px] text-slate-500 dark:text-slate-300 text-center py-6">
+                                        Data pembimbing belum tersedia. Silakan hubungi admin / prodi untuk mengisi pembimbing Anda.
                                     </div>
                                 )}
-                                <div ref={chatEndRef} />
+
+                                {hasAdvisor && chats.length === 0 && (
+                                    <div className="h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-500 text-center py-6">
+                                        <Icon path={PATHS.MessageCircle} size={40} className="mb-2" />
+                                        <p className="text-xs">Belum ada percakapan dengan pembimbing.</p>
+                                        <p className="text-[11px]">Mulai kirim pesan pertama Anda di bawah.</p>
+                                    </div>
+                                )}
+
+                                {hasAdvisor && chats.length > 0 && (
+                                    <>
+                                        {chats.map(chat => {
+                                            const isMe = chat.sender === currentUser.Nama;
+                                            return (
+                                                <div key={chat.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                                                    <div
+                                                        className={
+                                                            'max-w-[80%] px-3 py-2 rounded-2xl text-xs shadow-sm ' +
+                                                            (isMe
+                                                                ? 'bg-purple-600 text-white rounded-br-sm'
+                                                                : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-50 rounded-bl-sm')
+                                                        }
+                                                    >
+                                                        <p className="font-semibold mb-0.5">
+                                                            {isMe ? 'Anda' : chat.sender}
+                                                        </p>
+                                                        <p className="whitespace-pre-wrap break-words">
+                                                            {chat.message || chat.text || ''}
+                                                        </p>
+                                                        <p className="mt-1 text-[10px] opacity-70 text-right">
+                                                            {formatTime(chat.timestamp)}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                        <div ref={chatEndRef} />
+                                    </>
+                                )}
                             </div>
 
-                            <form onSubmit={handleSend} className="p-3 bg-white border-t border-purple-100 flex items-center gap-2">
-                                <input 
-                                    type="text" 
-                                    className="flex-1 bg-purple-50 border border-purple-100 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 transition"
-                                    placeholder="Ketik pertanyaan..."
-                                    value={input}
-                                    onChange={e => setInput(e.target.value)}
-                                    autoComplete="off"
-                                />
-                                <button 
-                                    type="submit" 
-                                    disabled={!input.trim()}
-                                    className="p-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                                >
-                                    <Icon path={PATHS.Send} size={18} />
-                                </button>
+                            <form onSubmit={handleSend} className="border-t border-slate-200/70 dark:border-slate-700/70 p-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur">
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="text"
+                                        disabled={!hasAdvisor}
+                                        value={input}
+                                        onChange={e => setInput(e.target.value)}
+                                        placeholder={hasAdvisor ? "Ketik pesan untuk pembimbing..." : "Pembimbing belum diatur"}
+                                        className="flex-1 px-3 py-2 rounded-full text-xs border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                                    />
+                                    <button
+                                        type="submit"
+                                        disabled={!hasAdvisor || !input.trim()}
+                                        className="p-2 rounded-full bg-purple-600 hover:bg-purple-700 text-white shadow-md disabled:opacity-40 disabled:cursor-not-allowed"
+                                        title="Kirim pesan"
+                                    >
+                                        <Icon path={PATHS.Send} size={16} />
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     )}
@@ -2881,6 +2785,7 @@ const App = () => {
             const [hasArchivedOldExams, setHasArchivedOldExams] = useState(false);
             const [taRoleFilter, setTaRoleFilter] = useState('all');
              const [taYearFilter, setTaYearFilter] = useState('all');
+            const [mahasiswaProdiFilter, setMahasiswaProdiFilter] = useState('all');
             const [reminderState, setReminderState] = useStickyState({}, 'sitafkes_reminder_state_v1');
 
             
@@ -3088,6 +2993,9 @@ const App = () => {
                             }
                             const penguji = String(item.Penguji_1 || item.Penguji || '').trim().toLowerCase();
                             if (penguji && penguji === userNameLower) roles.push('penguji');
+                        } else if (userRole === 'tendik') {
+                            // Tendik menerima pengingat semua jadwal sebagai staf akademik
+                            roles.push('tendik');
                         }
 
                         if (!roles.length) return;
@@ -3097,6 +3005,7 @@ const App = () => {
                             p1: 'Pembimbing 1',
                             p2: 'Pembimbing 2',
                             penguji: 'Penguji',
+                            tendik: 'Staf Akademik',
                         }[r] || r);
 
                         roles.forEach((r) => {
@@ -3408,7 +3317,7 @@ const handleRoleLogin = (role, userData = null) => {
                             <div className="font-extrabold text-2xl text-white tracking-tight leading-none">SI TA <span className="text-purple-400">FIKPsi</span></div>
                         </div>
                         <nav className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar space-y-1">
-                            {userRole !== 'mahasiswa' && <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>}
+                            {userRole && userRole !== 'mahasiswa' && <NavItem name="dashboard" icon={PATHS.Home} label="Dashboard" onClick={()=>{setPage('dashboard'); setMenuOpen(false)}} isActive={page==='dashboard'}/>}
                             {(userRole === 'admin') && <NavItem name="dosen" icon={PATHS.User} label="Data Dosen" onClick={()=>{setPage('dosen'); setMenuOpen(false)}} isActive={page==='dosen'}/>}
                             {(userRole === 'admin') && <NavItem name="mahasiswa" icon={PATHS.Users} label="Data Mahasiswa" onClick={()=>{setPage('mahasiswa'); setMenuOpen(false)}} isActive={page==='mahasiswa'}/>}
                             {userRole === 'mahasiswa' && <NavItem name="bimbingan" icon={PATHS.Chart} label="Lapor Progres" onClick={()=>{setPage('progres'); setMenuOpen(false)}} isActive={page==='progres'}/>}
@@ -3440,7 +3349,7 @@ const handleRoleLogin = (role, userData = null) => {
                             {(userRole === 'admin' || userRole === 'mahasiswa' || userRole === 'tendik' || userRole === 'dosen') && (
                                 <NavItem name="sidang" icon={PATHS.Sun} label="Jadwal Ujian" onClick={()=>{setPage('sidang'); setMenuOpen(false)}} isActive={page==='sidang'}/>
                             )}
-                            {userRole === 'admin' && (
+                            {(userRole && userRole !== 'mahasiswa') && (
                                 <NavItem
                                     name="log_reminder"
                                     icon={PATHS.Bell}
@@ -3491,8 +3400,63 @@ const handleRoleLogin = (role, userData = null) => {
                     </div>
 
                     <main className="flex-1 md:ml-72 p-4 md:p-8 pt-24 md:pt-10 h-screen overflow-y-auto touch-scroll">
-                        {page === 'dashboard' && userRole !== 'mahasiswa' && <Dashboard db={db} userRole={userRole} currentUser={currentUser}/>}
-                        {page === 'mahasiswa' && <GenericTable key="tbl-mhs" title="Data Mahasiswa & TA" data={db['Mahasiswa Tugas Akhir']} columns={TABLE_CONFIG['Mahasiswa Tugas Akhir'].columns} formConfig={TABLE_CONFIG['Mahasiswa Tugas Akhir'].form} onAdd={(d) => add('Mahasiswa Tugas Akhir', d)} onDel={(id) => del('Mahasiswa Tugas Akhir', id)} onUpdate={(id, d) => update('Mahasiswa Tugas Akhir', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
+                        {page === 'dashboard' && userRole && <Dashboard db={db} userRole={userRole} currentUser={currentUser}/>}
+                        {page === 'mahasiswa' && (
+                            <div className="space-y-4">
+                                <div className="flex flex-wrap items-center gap-2 mb-2">
+                                    <span className="text-[11px] font-semibold tracking-wide uppercase text-slate-500">Filter Prodi:</span>
+                                    <div className="inline-flex flex-wrap gap-1">
+                                        <button
+                                            onClick={() => setMahasiswaProdiFilter('all')}
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold border transition ${
+                                                mahasiswaProdiFilter === 'all'
+                                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                                                    : 'bg-white/60 text-slate-700 border-slate-200 hover:bg-indigo-50'
+                                            }`}
+                                        >
+                                            Semua
+                                        </button>
+                                        <button
+                                            onClick={() => setMahasiswaProdiFilter('S1 Ilmu Kesehatan Masyarakat')}
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold border transition ${
+                                                mahasiswaProdiFilter === 'S1 Ilmu Kesehatan Masyarakat'
+                                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                                                    : 'bg-white/60 text-slate-700 border-slate-200 hover:bg-indigo-50'
+                                            }`}
+                                        >
+                                            S1 IKM
+                                        </button>
+                                        <button
+                                            onClick={() => setMahasiswaProdiFilter('S2 Magister Kesehatan Masyarakat')}
+                                            className={`px-3 py-1 rounded-full text-xs font-semibold border transition ${
+                                                mahasiswaProdiFilter === 'S2 Magister Kesehatan Masyarakat'
+                                                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                                                    : 'bg-white/60 text-slate-700 border-slate-200 hover:bg-indigo-50'
+                                            }`}
+                                        >
+                                            S2 MKM
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <GenericTable
+                                    key="tbl-mhs"
+                                    title="Data Mahasiswa Tugas Akhir"
+                                    data={(db['Mahasiswa Tugas Akhir'] || []).filter((m) => {
+                                        if (mahasiswaProdiFilter === 'all') return true;
+                                        return String(m.Prodi || '').trim() === mahasiswaProdiFilter;
+                                    })}
+                                    columns={TABLE_CONFIG['Mahasiswa Tugas Akhir'].columns}
+                                    formConfig={TABLE_CONFIG['Mahasiswa Tugas Akhir'].form}
+                                    onAdd={(d) => add('Mahasiswa Tugas Akhir', d)}
+                                    onDel={(id) => del('Mahasiswa Tugas Akhir', id)}
+                                    onUpdate={(id, d) => update('Mahasiswa Tugas Akhir', id, d)}
+                                    allowAdd={userRole === 'admin' || userRole === 'tendik'}
+                                    allowDelete={userRole === 'admin'}
+                                    allowEdit={userRole === 'admin' || userRole === 'tendik'}
+                                />
+                            </div>
+                        )}
                         {page === 'dosen' && <GenericTable key="tbl-dosen" title="Data Dosen" data={db['Data Dosen']} columns={TABLE_CONFIG['Data Dosen'].columns} formConfig={TABLE_CONFIG['Data Dosen'].form} onAdd={d=>add('Data Dosen',d)} onDel={id=>del('Data Dosen',id)} onUpdate={(id, d)=>update('Data Dosen', id, d)} allowAdd={userRole==='admin'} allowDelete={userRole==='admin'} allowEdit={userRole==='admin'} />}
                         {page === 'progres' && userRole === 'mahasiswa' && <StudentProgress db={db} currentUser={currentUser} onUpdate={(col, id, data) => update(col, id, data)} />}
                         
@@ -3513,7 +3477,7 @@ const handleRoleLogin = (role, userData = null) => {
                             />
                         )}
 
-                        {page === 'log_reminder' && userRole === 'admin' && (
+                        {page === 'log_reminder' && userRole && userRole !== 'mahasiswa' && (
                             <GenericTable 
                                 key="tbl-log-reminder"
                                 title="Log Sistem Pengingat"
@@ -3780,7 +3744,7 @@ const handleRoleLogin = (role, userData = null) => {
                     </main>
                     <button
                         onClick={toggleDarkMode}
-                        className="hidden md:inline-flex items-center gap-2 fixed top-5 right-6 z-40 btn-ghost shadow-lg backdrop-blur-md"
+                        className="hidden md:inline-flex items-center gap-2 fixed top-5 left-1/2 -translate-x-1/2 z-40 btn-ghost shadow-lg backdrop-blur-md"
                         title={darkMode ? 'Mode terang' : 'Mode gelap'}
                     >
                         <Icon path={darkMode ? PATHS.Sun : PATHS.Moon} size={18} />
@@ -3804,6 +3768,8 @@ const handleRoleLogin = (role, userData = null) => {
                         userRole={userRole}
                         isOpen={isChatOpen} 
                         onToggle={() => setIsChatOpen(!isChatOpen)} 
+                        add={add}
+                        update={update}
                     />
                 </div>
             );
