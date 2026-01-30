@@ -3239,8 +3239,6 @@ const StudentProgress = ({ db, currentUser, onUpdate, onAdd }) => {
         };
     });
     const [isSaving, setIsSaving] = useState(false);
-    const [judulDraft, setJudulDraft] = useState('');
-    const [isUpdatingTitle, setIsUpdatingTitle] = useState(false);
     const printRef = useRef(null);
 
     
@@ -3262,11 +3260,6 @@ const StudentProgress = ({ db, currentUser, onUpdate, onAdd }) => {
         };
     }, [studentData, currentUser]);
 
-    // Sinkronkan judul draft dari data TA yang tersimpan
-    useEffect(() => {
-        const v = (identitas && identitas.judul && identitas.judul !== '-') ? String(identitas.judul) : '';
-        setJudulDraft((prev) => (prev ? prev : v));
-    }, [identitas && identitas.judul]);
 
     const history = useMemo(() => {
         const all = Array.isArray(db['Lembar Konsultasi Bimbingan']) ? db['Lembar Konsultasi Bimbingan'] : [];
@@ -3310,32 +3303,6 @@ const StudentProgress = ({ db, currentUser, onUpdate, onAdd }) => {
         });
     };
 
-    const handleUpdateJudulOnly = () => {
-        if (!studentData) {
-            alert('Data mahasiswa tidak ditemukan di daftar Tugas Akhir. Silakan hubungi admin.');
-            return;
-        }
-        const clean = String(judulDraft || '').trim();
-        if (!clean) {
-            alert('Judul Tugas Akhir tidak boleh kosong.');
-            return;
-        }
-        setIsUpdatingTitle(true);
-        try {
-            if (typeof onUpdate === 'function') {
-                onUpdate('Mahasiswa Tugas Akhir', studentData.id, {
-                    Judul: clean,
-                    JudulTA: clean,
-                    Judul_TA: clean,
-                });
-            }
-            alert('Judul Tugas Akhir berhasil diperbarui.');
-        } finally {
-            setIsUpdatingTitle(false);
-        }
-    };
-
-
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -3360,7 +3327,7 @@ const StudentProgress = ({ db, currentUser, onUpdate, onAdd }) => {
             // Update ringkasan progres di tabel Mahasiswa Tugas Akhir
             if (typeof onUpdate === 'function') {
                 onUpdate('Mahasiswa Tugas Akhir', studentData.id, {
-                    Judul: String((judulDraft || identitas.judul || studentData.Judul || '')).trim(),
+                    Judul: identitas.judul && identitas.judul !== '-' ? identitas.judul : (studentData.Judul || ''),
                     BimbinganCount: bKe,
                     ProgresDeskripsi: form.deskripsi,
                     ProgresBab: form.bab,
@@ -3537,31 +3504,6 @@ ${printContents}
                             <div>Pembimbing 1: <span className="font-medium">{identitas.pembimbing1}</span></div>
                             <div>Pembimbing 2: <span className="font-medium">{identitas.pembimbing2}</span></div>
                             <div>Total bimbingan tersimpan: <span className="font-medium">{history.length}x</span></div>
-                        </div>
-
-                        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-xs space-y-2">
-                            <div className="flex items-center justify-between gap-2">
-                                <div className="font-semibold text-slate-700">Update Judul Tugas Akhir</div>
-                                <span className="text-[10px] text-slate-500">Opsional</span>
-                            </div>
-                            <input
-                                type="text"
-                                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/70 focus:border-indigo-500"
-                                placeholder="Tulis judul tugas akhir terbaru"
-                                value={judulDraft}
-                                onChange={(e) => setJudulDraft(e.target.value)}
-                            />
-                            <button
-                                type="button"
-                                onClick={handleUpdateJudulOnly}
-                                disabled={isUpdatingTitle || !String(judulDraft || '').trim()}
-                                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 text-white px-3 py-2 text-xs font-semibold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {isUpdatingTitle ? 'Menyimpan judul...' : 'Simpan Judul TA'}
-                            </button>
-                            <div className="text-[10px] text-slate-500">
-                                Perubahan judul akan langsung tersimpan pada data Tugas Akhir Anda.
-                            </div>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-3">
@@ -4717,116 +4659,43 @@ const lulusanFormConfig = [
                                     const k = String(m.Nama || '').trim().toLowerCase();
                                     if (k) byName[k] = m;
                                 });
-                                
-                                // Sembunyikan jadwal yang sudah lewat (robust untuk berbagai format tanggal/jam).
+
+                                // Sembunyikan jadwal yang sudah lewat (berdasarkan Tanggal + Jam/JamSelesai).
                                 const now = new Date();
+                                const toDateTime = (tanggal, jam) => {
+                                    if (!tanggal) return null;
+                                    const d = new Date(tanggal);
+                                    if (isNaN(d.getTime())) return null;
 
-                                const pick = (obj, keys) => {
-                                    for (const k of keys) {
-                                        if (obj && obj[k] !== undefined && obj[k] !== null && String(obj[k]).trim() !== '') return obj[k];
-                                    }
-                                    return null;
-                                };
-
-                                const parseDateValue = (v) => {
-                                    if (!v && v !== 0) return null;
-                                    if (v instanceof Date) {
-                                        const d = new Date(v.getTime());
-                                        if (isNaN(d.getTime())) return null;
-                                        return d;
-                                    }
-                                    if (typeof v === 'number') {
-                                        // timestamp ms
-                                        if (v > 1e12) {
-                                            const d = new Date(v);
-                                            return isNaN(d.getTime()) ? null : d;
+                                    if (jam) {
+                                        if (jam instanceof Date) {
+                                            d.setHours(jam.getHours(), jam.getMinutes(), 0, 0);
+                                            return d;
                                         }
-                                        // kemungkinan Excel serial date (hari sejak 1899-12-30)
-                                        if (v > 20000 && v < 80000) {
-                                            const d = new Date(Date.UTC(1899, 11, 30) + v * 86400000);
-                                            return isNaN(d.getTime()) ? null : d;
+                                        const s = String(jam);
+                                        // Jika jam berupa ISO datetime
+                                        if (s.includes('T')) {
+                                            const dt = new Date(s);
+                                            if (!isNaN(dt.getTime())) return dt;
                                         }
-                                    }
-                                    const s = String(v).trim();
-                                    if (!s) return null;
-
-                                    // ISO datetime
-                                    if (s.includes('T')) {
-                                        const d = new Date(s);
-                                        return isNaN(d.getTime()) ? null : d;
-                                    }
-
-                                    // Ambil 3 komponen angka dari format umum (yyyy-mm-dd, dd-mm-yyyy, dd/mm/yyyy, dll)
-                                    const parts = s.split(/[^0-9]/).filter(Boolean);
-                                    if (parts.length >= 3) {
-                                        let y, m, d;
-                                        if (parts[0].length === 4) {
-                                            // yyyy mm dd
-                                            y = parseInt(parts[0], 10);
-                                            m = parseInt(parts[1], 10);
-                                            d = parseInt(parts[2], 10);
-                                        } else {
-                                            // dd mm yyyy
-                                            d = parseInt(parts[0], 10);
-                                            m = parseInt(parts[1], 10);
-                                            y = parseInt(parts[2], 10);
-                                        }
-                                        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-                                            const dt = new Date(y, m - 1, d);
-                                            return isNaN(dt.getTime()) ? null : dt;
+                                        const cleaned = s.replace('.', ':');
+                                        const parts = cleaned.split(':');
+                                        const hh = parseInt(parts[0] || '0', 10);
+                                        const mm = parseInt(parts[1] || '0', 10);
+                                        if (!isNaN(hh) && !isNaN(mm)) {
+                                            d.setHours(hh, mm, 0, 0);
+                                            return d;
                                         }
                                     }
 
-                                    // fallback: coba parse bawaan JS
-                                    const d = new Date(s);
-                                    return isNaN(d.getTime()) ? null : d;
-                                };
-
-                                const parseTime = (v) => {
-                                    if (!v && v !== 0) return null;
-                                    if (v instanceof Date) return { hh: v.getHours(), mm: v.getMinutes() };
-                                    const s = String(v).trim();
-                                    if (!s) return null;
-                                    if (s.includes('T')) {
-                                        const d = new Date(s);
-                                        if (!isNaN(d.getTime())) return { hh: d.getHours(), mm: d.getMinutes() };
-                                    }
-                                    // ambil angka jam:menit dari string (mis. "10.30", "10:30 WIB", "10:30-11:30")
-                                    const cleaned = s.replace('.', ':');
-                                    const m = cleaned.match(/(\d{1,2})\s*[:]\s*(\d{1,2})/);
-                                    if (m) {
-                                        const hh = parseInt(m[1], 10);
-                                        const mm = parseInt(m[2], 10);
-                                        if (!isNaN(hh) && !isNaN(mm)) return { hh, mm };
-                                    }
-                                    // jika hanya jam (mis. "10")
-                                    const m2 = cleaned.match(/\b(\d{1,2})\b/);
-                                    if (m2) {
-                                        const hh = parseInt(m2[1], 10);
-                                        if (!isNaN(hh)) return { hh, mm: 0 };
-                                    }
-                                    return null;
-                                };
-
-                                const toEndDateTime = (row) => {
-                                    const tanggalRaw = pick(row, ['Tanggal', 'tanggal', 'Tanggal Ujian', 'TGL', 'tgl']);
-                                    const base = parseDateValue(tanggalRaw);
-                                    if (!base) return null;
-
-                                    // default: akhir hari
-                                    base.setHours(23, 59, 59, 999);
-
-                                    // gunakan Jam Selesai jika ada
-                                    const jamSelesaiRaw = pick(row, ['JamSelesai', 'Jam Selesai', 'JAM SELESAI', 'Jam_Akhir', 'JamAkhir']);
-                                    const t = parseTime(jamSelesaiRaw);
-
-                                    if (t) base.setHours(t.hh, t.mm, 0, 0);
-                                    return base;
+                                    // Jika tidak ada jam, dianggap masih berlaku sampai akhir hari tersebut
+                                    d.setHours(23, 59, 59, 999);
+                                    return d;
                                 };
 
                                 const visibleJadwal = (Array.isArray(jadwal) ? jadwal : []).filter(j => {
-                                    const end = toEndDateTime(j);
-                                    if (!end) return true; // kalau tanggal tidak terbaca, jangan disembunyikan
+                                    const end = toDateTime(j?.Tanggal, j?.JamSelesai);
+                                    if (!end) return true; // jika tanggal tidak valid, tetap tampil
                                     return end.getTime() >= now.getTime();
                                 });
 
