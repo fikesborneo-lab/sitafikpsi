@@ -1948,9 +1948,49 @@ const formatRupiah = (angka) => {
                     return globalJadwal.filter(j => String(j.Mahasiswa || '').trim() === myName);
                 }
 
+                // Dosen: tampilkan hanya jadwal mahasiswa bimbingan/penguji masing-masing dosen
+                if (userRole === 'dosen' && currentUser?.Nama) {
+                    const myName = String(currentUser.Nama).trim().toLowerCase();
+                    const myStudents = new Set(
+                        (globalMhs || [])
+                            .filter(m => {
+                                const p1 = String(m.Pembimbing_1 || '').trim().toLowerCase();
+                                const p2 = String(m.Pembimbing_2 || '').trim().toLowerCase();
+                                const penguji = String(m.Penguji || '').trim().toLowerCase();
+                                return p1 === myName || p2 === myName || penguji === myName;
+                            })
+                            .map(m => String(m.Nama || '').trim())
+                            .filter(Boolean)
+                    );
+                    return (globalJadwal || []).filter(j => myStudents.has(String(j.Mahasiswa || '').trim()));
+                }
+
                 // Dosen, admin, dan tendik: lihat semua jadwal yang terdata
                 return globalJadwal;
-            }, [globalJadwal, userRole, currentUser]);
+            }, [globalJadwal, userRole, currentUser, globalMhs]);
+
+            // Jadwal terdekat: hanya jadwal mendatang (yang belum lewat) dan diurutkan dari yang paling dekat
+            const dashboardJadwalTerdekat = useMemo(() => {
+                const now = new Date();
+                const nowMs = now.getTime();
+                const withDate = (dashboardJadwal || [])
+                    .map((item) => {
+                        if (!item || !item.Tanggal) return null;
+
+                        // Untuk hide yang sudah lewat, pakai jam selesai jika ada (fallback ke jam mulai)
+                        const endDt = buildDateTimeFromParts(item.Tanggal, (item.JamSelesai || item.Jam));
+                        const startDt = buildDateTimeFromParts(item.Tanggal, item.Jam);
+                        if (!startDt || isNaN(startDt.getTime())) return null;
+                        const endValid = endDt && !isNaN(endDt.getTime()) ? endDt : startDt;
+
+                        return { ...item, _startDate: startDt, _endDate: endValid };
+                    })
+                    .filter(Boolean);
+
+                return withDate
+                    .filter((item) => item._endDate.getTime() >= nowMs)
+                    .sort((a, b) => a._startDate - b._startDate);
+            }, [dashboardJadwal]);
 
             const stats = {
 
@@ -2177,7 +2217,7 @@ const formatRupiah = (angka) => {
                                 Jadwal Terdekat
                             </h3>
                             <div className="space-y-3 overflow-y-auto flex-1 pr-2 custom-scrollbar relative z-10">
-                                {dashboardJadwal.slice(0, 5).map((j, i) => (
+                                {dashboardJadwalTerdekat.slice(0, 1).map((j, i) => (
                                     <div key={i} className="bg-white/5 backdrop-blur-sm p-3 rounded-xl border border-white/10 hover:bg-white/10 transition group">
                                             <div className="flex justify-between items-start mb-1">
                                                 <div className="font-bold text-sm text-yellow-300 group-hover:text-yellow-200 transition">{j.Mahasiswa}</div>
@@ -2188,12 +2228,12 @@ const formatRupiah = (angka) => {
                                                     <Icon path={PATHS.FileText} size={12}/>    
                                                     {formatDateId(j.Tanggal)}
                                                  </span>
-                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {(() => { const dt = buildDateTimeFromParts(j.Tanggal, j.Jam); return dt ? dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''; })()}</span>
+                                                 <span className="flex items-center gap-1"><Icon path={PATHS.Sun} size={12}/> {(() => { const dt = (j && j._startDate) ? j._startDate : buildDateTimeFromParts(j.Tanggal, j.Jam); return dt ? dt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''; })()}</span>
                                                  <span className="flex items-center gap-1"><Icon path={PATHS.Home} size={12}/> {j.Ruang}</span>
                                             </div>
                                     </div>
                                 ))}
-                                {dashboardJadwal.length === 0 && <p className="text-sm text-slate-400 text-center py-10">Belum ada jadwal {userRole === 'dosen' ? 'untuk mahasiswa Anda' : ''}.</p>}
+                                {dashboardJadwalTerdekat.length === 0 && <p className="text-sm text-slate-400 text-center py-10">Belum ada jadwal terdekat {userRole === 'dosen' ? 'untuk mahasiswa Anda' : ''}.</p>}
                             </div>
                         </div>
                     </div>
@@ -4673,10 +4713,13 @@ const lulusanFormConfig = [
                                             return d;
                                         }
                                         const s = String(jam);
-                                        // Jika jam berupa ISO datetime
+                                        // Jika jam berupa ISO datetime, ambil jam-menitnya saja lalu tempel ke tanggal ujian
                                         if (s.includes('T')) {
                                             const dt = new Date(s);
-                                            if (!isNaN(dt.getTime())) return dt;
+                                            if (!isNaN(dt.getTime())) {
+                                                d.setHours(dt.getHours(), dt.getMinutes(), 0, 0);
+                                                return d;
+                                            }
                                         }
                                         const cleaned = s.replace('.', ':');
                                         const parts = cleaned.split(':');
